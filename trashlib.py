@@ -52,6 +52,14 @@ TEST SPACE
 
 # Retrieve Article
 test = fetch_abstract(27045581)
+print test
+
+# test data
+test = "Rabbits are dangerous. Rabbits are not dangerous"
+print test
+# import nltk stuff
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
 
 # Structure Information
 sentences = nltk.sent_tokenize(test)
