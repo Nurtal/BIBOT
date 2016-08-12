@@ -2,6 +2,12 @@
 <object>
 	<id>leucocyte</id>
 	<nature>cell</nature>
-	<interaction></interaction>
-	<relation>leucocyte test imaginarystuff</relation>
+	<parent>cell</parent>
+	<interaction>chocolate</interaction>
+	<number_of_relations>1</number_of_relations>
+	<relation_1>
+		<item_left>leucocyte</item_left>
+		<action>generate</action>
+		<item_right>chocolate</item_right>
+	</relation_1>
 </object>

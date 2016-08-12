@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <object>
 	<id>monocyte</id>
-	<nature>leucocyte</nature>
+	<parent>leucocyte</parent>
+	<nature>cell</nature>
 	<interaction>lymphocyte</interaction>
-	<relation>monocyte decrease lymphocyte</relation>
-	<relation>monocyte decrease imaginaryElt</relation>
+	<number_of_relations>2</number_of_relations>
+	<relation_1>
+		<item_left>monocyte</item_left>
+		<action>increase</action>
+		<item_right>lymphocyte</item_right>
+	</relation_1>
+	<relation_2>
+		<item_left>monocyte</item_left>
+		<action>increase</action>
+		<item_right>imaginaryElt</item_right>
+	</relation_2>
 </object>

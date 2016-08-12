@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<object>
+	<id>id for element</id>
+	<parent>parent of element</parent>
+	<nature>nature of element</nature>
+	<interaction>element id</interaction>
+	<number_of_relations>2</number_of_relations>
+	<relation_1>
+		<item_left>element 1</item_left>
+		<item_left>imaginary element</item_left>
+		<action>increase</action>
+		<item_right>element 2</item_right>
+		<item_right>element 4</item_right>
+	</relation_1>
+	<relation_2>
+		<item_left>element grey</item_left>
+		<item_left>imaginary falcon</item_left>
+		<action>decrease</action>
+		<item_right>protein 2</item_right>
+		<item_right>cell 4</item_right>
+	</relation_2>
+</object>

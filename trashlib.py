@@ -54,6 +54,8 @@ TEST SPACE
 test = fetch_abstract(27045581)
 print test
 
+
+"""
 # test data
 test = "Rabbits are dangerous. Rabbits are not dangerous"
 print test
@@ -73,3 +75,4 @@ for sentence in sentences:
 	print sentence
 	result = cp.parse(sentence)
 	result.draw()
+"""
