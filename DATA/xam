@@ -1,0 +1,1000 @@
+Q93062	association	Q2MG95
+Q93062	association	P03220
+Q93062	physical association	P03188
+Q93062	physical association	Q8AZJ3
+Q93062	physical association	Q04360
+Q93062	physical association	P03203
+Q93062	physical association	P03204
+Q9NP72	association	P0C739
+Q9NP72	association	P0CK56
+Q9NP72	association	P0CK58
+Q9NP72	association	P69901
+Q9NP72	association	Q2MG95
+Q9NP72	association	P03182
+Q9NP72	association	P03246
+Q9NP72	association	P06460
+Q9NP72	association	P06461
+Q9NP72	association	P06792
+Q9NP72	association	P06927
+Q9NP72	association	P0CK49
+Q9NXS2	direct interaction	P31016
+Q9NXS2	association	P0C739
+Q9NXS2	association	P0CK56
+Q9NXS2	association	P0CK58
+Q9NXS2	association	P69901
+Q9NXS2	association	Q2MG95
+Q9NXS2	association	P06461
+Q9NXS2	association	P06927
+O43242	association	Q9UKV8
+O43242	association	Q99459
+O43242	association	Q13573
+O43242	association	Q16186
+O43242	association	Q9NWV8
+O43242	physical association	P55036
+O43242	association	P05412
+O43242	association	O35593
+O43242	association	P0CK56
+O43242	association	P13285
+O43242	association	P30119
+O43242	association	Q2MG95
+O43242	association	P06463
+P43686	association	Q13573
+P43686	association	Q99459
+P43686	association	Q16186
+P43686	association	Q9NWV8
+P43686	physical association	P55036
+P43686	association	P05412
+P43686	association	O35593
+P43686	association	P0CK56
+P43686	association	P0CK58
+P43686	association	P13285
+P43686	association	P30119
+P43686	association	P69901
+P43686	association	Q2MG95
+P43686	association	P03179
+P43686	association	P06460
+P43686	association	Q2MG97
+P43686	association	P06463
+O60831	physical association	O60831
+O60831	physical association	O75915
+O60831	physical association	P51681
+O60831	colocalization	P27824
+O60831	colocalization	O60664
+O60831	association	P0C739
+O60831	association	P0CK56
+O60831	association	P0CK58
+O60831	association	P13285
+O60831	association	P69901
+O60831	association	Q2MG95
+O60831	association	P03177
+O60831	association	P03182
+O60831	association	P03246
+O60831	association	P06460
+O60831	association	P06461
+O60831	association	P06792
+O60831	association	P06927
+O60831	association	P0CK49
+Q9UPN7	physical association	Q99962
+Q9UPN7	association	O00743
+Q9UPN7	association	P0CK56
+Q9UPN7	association	P30119
+Q9UPN7	association	Q2MG95
+Q9UPN7	association	Q2MG97
+O75688	covalent binding	P05161
+O75688	genetic interaction	P50750
+O75688	physical association	P27448
+O75688	association	P0C739
+O75688	association	P0CK56
+O75688	association	P0CK58
+O75688	association	Q2MG95
+O75688	association	P03177
+O75688	association	P03225
+O75688	association	P03246
+O75688	association	P06428
+O75688	association	Q2MG97
+O75688	association	Q2PRM9
+O75688	association	P06930
+O75688	association	P0CK49
+Q15165	association	P0CK56
+Q15165	association	P69901
+Q15165	association	P03182
+Q15165	association	P06460
+Q15165	association	P06461
+Q15165	association	P06792
+Q15165	association	P06927
+O00469	association	P55317
+O00469	association	P0CK56
+O00469	association	P0CK58
+O00469	association	P06463
+O43164	association	P0CK56
+O43164	association	P30119
+O43164	association	Q2MG95
+O43164	association	Q2MG97
+O00264	physical association	Q9Y3D7
+O00264	physical association	Q71F23
+O00264	association	P0C739
+O00264	association	P0CK56
+O00264	association	P0CK58
+O00264	association	P69901
+O00264	association	Q2MG95
+O00264	association	P03182
+O00264	association	P03246
+O00264	association	P06460
+O00264	association	P06461
+O00264	association	P06792
+O00264	association	P0CK49
+O00264	association	Q9WMX2-PRO_0000037547
+O75381	physical association	O75381
+O75381	physical association	Q92968
+O75381	physical association	P50542
+O75381	physical association	P40855
+O75381	colocalization	Q12931
+O75381	colocalization	P22307
+O75381	association	P0CK56
+O75381	association	P30119
+O75381	association	Q2MG95
+O75381	association	P03179
+O75381	association	P03220
+Q9NR12	association	Q99459
+Q9NR12	association	Q13573
+Q9NR12	physical association	Q9BZL6
+Q9NR12	association	P0CK56
+Q9NR12	association	P30119
+Q9NR12	association	P69901
+Q9NR12	association	Q2MG95
+Q9NR12	association	P03177
+Q9NR12	association	P03182
+Q9NR12	association	P03220
+Q9NR12	association	P06428
+Q9NR12	association	P06430
+Q9NR12	association	P06460
+Q9NR12	association	Q2MG97
+Q9NR12	association	P06464
+Q9NR12	association	P0CK49
+P50479	colocalization	Q12923
+P50479	colocalization	Q15654
+P50479	colocalization	Q9Z1Y4
+P50479	direct interaction	Q64512
+P50479	association	P0CK56
+P50479	association	P0CK58
+P50479	association	P30119
+P50479	association	Q2MG95
+P50479	association	P03246
+P50479	association	Q2MG97
+P12004	association	Q15843
+P12004	physical association	Q9H211
+P12004	physical association	P39748
+P12004	colocalization	Q01831
+P12004	direct interaction	Q9H160
+P12004	direct interaction	P04075
+P12004	direct interaction	P60174
+P12004	physical association	P04406
+P12004	physical association	P06733
+P12004	physical association	P00558
+P12004	physical association	P18669
+P12004	physical association	P08865
+P12004	physical association	P30041
+P12004	physical association	P00918
+P12004	physical association	P62937
+P12004	physical association	P07355
+P12004	physical association	P08729
+P12004	physical association	P40926
+P12004	physical association	P68104
+P12004	direct interaction	Q13111
+P12004	association	P05412
+P12004	association	Q9NTI5
+P12004	association	P51587
+P12004	association	P04296
+P12004	physical association	P00883
+P12004	physical association	P46406
+P12004	association	P0CK56
+P12004	association	P03129
+P12004	association	Q2PRM9
+P12004	association	Q8AZK7
+P12004	physical association	H9XIJ5
+P12004	physical association	Q67020
+P12004	physical association	B4URF5
+P12004	physical association	B4URF7
+P12004	association	Q9WMX2
+Q9NRP0	association	P0CK56
+Q9NRP0	association	P69901
+Q9NRP0	association	P06460
+Q9NRP0	association	P06792
+Q9NRP0	association	P06927
+Q04721	physical association	Q15797
+Q04721	physical association	Q15828
+Q04721	physical association	Q96J88
+Q04721	physical association	Q96KN1
+Q04721	physical association	Q14627
+Q04721	physical association	Q13007
+Q04721	physical association	Q86UX2
+Q04721	physical association	Q9Y337
+Q04721	physical association	Q9BTC8
+Q04721	physical association	Q9P2W1
+Q04721	physical association	Q9Y5Y6
+Q04721	association	Q06330
+Q04721	association	P0CK56
+Q04721	association	P0CK58
+Q04721	association	P69901
+Q04721	association	P03182
+Q04721	association	P06460
+Q04721	association	P06461
+Q8NEY1	association	P0CK56
+Q9UBG0	physical association	P31749
+Q9UBG0	physical association	O95429
+Q9UBG0	physical association	Q9HCU9
+Q9UBG0	physical association	Q92731
+Q9UBG0	physical association	Q86YC2
+Q9UBG0	physical association	Q02962
+Q9UBG0	physical association	O15297
+Q9UBG0	physical association	P18031
+Q9UBG0	physical association	P04049
+Q9UBG0	physical association	Q8TDY2
+Q9UBG0	physical association	O43542
+Q9UBG0	association	P0C739
+Q9UBG0	association	P0CK56
+P29966	association	O95758
+P29966	association	P0C739
+P29966	association	P0CK56
+P29966	association	P30119
+P29966	association	P03182
+P29966	association	P03220
+P29966	association	P03225
+P29966	association	P03246
+P29966	association	P06460
+Q9UNF1	association	Q13573
+Q9UNF1	association	P05412
+Q9UNF1	association	P0CK56
+Q9UNF1	association	Q9WMX2-PRO_0000037551
+P28300	association	P0C739
+P28300	association	P0CK56
+P28300	association	P0CK58
+P28300	association	P30119
+P28300	association	P69901
+P28300	association	Q2KRY6
+P28300	association	Q2MG95
+P28300	association	P03179
+P28300	association	P03182
+P28300	association	P03220
+P28300	association	P03225
+P28300	association	P04019
+P28300	association	P06428
+P28300	association	P06430
+P28300	association	P06460
+P28300	association	P06461
+P28300	association	Q2MG96
+P28300	association	Q2MG97
+P28300	association	Q8AZK7
+P28300	association	P06464
+P28300	association	P06463
+P28300	association	P06932
+P28300	association	P0CK49
+P11047	physical association	Q71F23
+P11047	physical association	Q6VMQ6
+P11047	disulfide bond	P30101
+P11047	association	P0CK56
+Q63ZY3	physical association	Q15788
+Q63ZY3	association	Q9Y6Q9
+Q63ZY3	association	Q9Y3R0
+Q63ZY3	phosphorylation reaction	P68400
+Q63ZY3	physical association	Q08379
+Q63ZY3	association	P85037
+Q63ZY3	association	Q01167
+Q63ZY3	association	P0CK56
+Q63ZY3	association	P0CK58
+Q63ZY3	association	P30119
+Q63ZY3	association	Q2MG95
+Q63ZY3	association	P03177
+Q63ZY3	association	P03179
+Q63ZY3	association	P03220
+Q63ZY3	association	P03225
+Q63ZY3	association	P06428
+Q63ZY3	association	Q2MG96
+Q63ZY3	association	Q2MG97
+Q63ZY3	association	Q8AZK7
+Q63ZY3	association	Q8AZJ3
+O00410	association	Q99459
+O00410	association	Q13573
+O00410	association	O95758
+O00410	physical association	P18124
+O00410	physical association	Q7Z6M2
+O00410	direct interaction	P03107
+O00410	direct interaction	P04012
+O00410	direct interaction	P03101
+O00410	association	P0C739
+O00410	association	P0CK56
+O00410	association	P03225
+O00410	association	Q2MG97
+Q70UQ0	physical association	O60341
+Q70UQ0	association	P05412
+Q70UQ0	association	P0C739
+Q70UQ0	association	P0CK56
+Q70UQ0	association	P0CK58
+Q70UQ0	association	P69901
+Q70UQ0	association	Q2MG95
+Q70UQ0	association	P03182
+Q70UQ0	association	P03209
+Q70UQ0	association	P03246
+Q70UQ0	association	P06460
+Q70UQ0	association	P06461
+Q70UQ0	association	P06792
+Q70UQ0	association	P06927
+Q70UQ0	association	P0CK49
+Q70UQ0	association	Q9WMX2-PRO_0000037541
+P05362	physical association	P0CG48
+P05362	association	P0CK56
+Q9UJ14	association	P0C739
+Q9UJ14	association	P0CK56
+Q9UJ14	association	P69901
+Q9UJ14	association	P03182
+Q9UJ14	association	P06460
+Q9UJ14	association	P06461
+Q9UJ14	association	P06792
+Q9UJ14	association	P06927
+Q9UJ14	association	P0CK49
+Q06210	association	P05412
+Q06210	association	P0CK56
+Q06210	association	Q2MG95
+Q06210	association	P06428
+Q06210	association	P0CK49
+Q14393	direct interaction	P30530
+Q14393	association	P0CK56
+Q14393	association	P30119
+Q14393	association	P69901
+Q14393	association	Q2MG95
+Q14393	association	P03220
+Q14393	association	P06461
+Q14393	association	Q2MG97
+Q14393	association	P06463
+Q14393	association	P06788
+Q14393	association	P0CK49
+O95302	association	P0CK56
+Q9Y285	association	P05412
+Q9Y285	association	P19838
+Q9Y285	association	P0CK56
+Q9Y285	association	Q2MG95
+Q969X5	association	P0C739
+Q969X5	association	P0CK56
+Q969X5	association	P69901
+Q969X5	association	P03182
+Q969X5	association	P03246
+Q969X5	association	P06460
+Q969X5	association	P06461
+Q969X5	association	P06792
+Q969X5	association	P06927
+Q969X5	association	P0CK49
+O95967	association	P0CK56
+O95967	association	Q2MG95
+O95967	association	P03220
+O95967	association	P06463
+Q9UHL4	association	P0C739
+Q9UHL4	association	P0CK56
+Q9UHL4	association	P69901
+Q9UHL4	association	Q2MG97
+Q9UHL4	association	P0CK49
+Q96EY1	physical association	O60341
+Q96EY1	physical association	Q86X55
+Q96EY1	physical association	Q96LA8
+Q96EY1	association	Q14197
+Q96EY1	physical association	O15198
+Q96EY1	physical association	Q16795
+Q96EY1	association	P05412
+Q96EY1	association	Q9GZX7
+Q96EY1	association	P0CK56
+Q96EY1	association	P30119
+Q96EY1	association	P69901
+Q96EY1	association	Q2MG95
+Q96EY1	association	P06461
+Q96EY1	physical association	P06932
+Q9P2D7	association	P0CK56
+P14868	physical association	Q13155
+P14868	physical association	Q92569
+P14868	physical association	P07900
+P14868	association	O95816
+P14868	association	Q6ZQN5
+P14868	association	P05412
+P14868	association	Q08050
+P14868	association	Q99853
+P14868	association	Q8AZK7
+P14868	association	P0CK56
+P14868	association	Q2MG97
+Q16527	association	P05412
+Q16527	association	P0CK56
+Q16527	association	Q2MG95
+Q16527	association	P03177
+Q16527	association	P03182
+Q16527	association	P03220
+Q16527	association	P03246
+Q16527	association	Q9DUG7
+Q9NZV1	physical association	O41949
+Q9NZV1	association	P0C739
+Q9NZV1	association	P0CK56
+Q9NZV1	association	P0CK58
+Q9NZV1	association	Q8AZJ3
+P53621	association	Q9UL18
+P53621	association	Q9UKV8
+P53621	association	Q99459
+P53621	association	Q13573
+P53621	association	Q9NTJ5
+P53621	association	P05412
+P53621	association	Q12952
+P53621	association	Q9C009
+P53621	association	Q6PIV2
+P53621	association	Q99853
+P53621	association	P0C739
+P53621	association	P0CK56
+P53621	association	P69901
+P53621	association	Q2MG95
+P53621	association	P03220
+P53621	association	P04020
+P53621	association	P06430
+P53621	association	P06460
+P53621	association	P06461
+P53621	association	P06464
+P53621	association	P06788
+P53621	association	P06792
+P53621	association	P06932
+P53621	association	P06927
+P12110	association	P0CK56
+P12110	association	P06463
+P78357	association	P0C739
+P78357	association	P0CK56
+P78357	association	P69901
+P78357	association	P03182
+P78357	association	P06461
+Q99439	association	P0CK56
+Q99439	association	P03225
+Q99653	association	P0C739
+Q99653	association	P0CK56
+Q99653	association	P69901
+Q99653	association	P03182
+Q99653	association	P06460
+Q5VV42	association	P0CK56
+Q5VV42	association	P69901
+Q5VV42	association	P06461
+Q5VV42	association	Q2MG95
+Q5VV42	association	P06792
+Q5VV42	association	P06927
+P16070	association	P0C739
+P16070	association	P0CK56
+P16070	association	P0CK58
+P16070	association	P13285
+P16070	association	P69901
+P16070	association	P03182
+P16070	association	P03246
+P16070	association	P06460
+P16070	association	P06461
+P16070	association	Q2MG95
+P16070	association	Q2PRM9
+P16070	association	Q9DUG7
+P16070	association	P06792
+P16070	association	P06927
+P16070	association	P0CK49
+P35520	physical association	P35520
+P35520	physical association	P10644
+P35520	association	P0CK56
+P35520	association	P30119
+Q9NXH8	association	P0CK56
+Q9NXH8	association	P0CK58
+Q9NXH8	association	P30119
+Q9NXH8	association	P69901
+Q9NXH8	association	P03129
+Q9NXH8	association	P03177
+Q9NXH8	association	P03225
+Q9NXH8	association	P06461
+Q9NXH8	association	Q2MG95
+Q9NXH8	association	Q2MG96
+Q9NXH8	association	Q2MG97
+Q9NXH8	association	Q8AZJ3
+Q9NXH8	association	P06927
+Q9HDC9	association	P0C739
+Q9HDC9	association	P0CK56
+Q9HDC9	association	P69901
+Q9HDC9	association	P06461
+Q9HDC9	association	P06792
+Q9HDC9	association	P06927
+P46379	physical association	P20073
+P46379	physical association	P55345
+P46379	association	P04637
+P46379	physical association	O95405
+P46379	physical association	Q5TF85
+P46379	physical association	Q05209
+P46379	physical association	O75400
+P46379	association	P60896
+P46379	association	Q8TEK3
+P46379	association	P0CK56
+P46379	association	P30119
+P46379	association	P03179
+P46379	association	P03220
+P46379	association	Q2MG95
+P98194	association	P0C739
+P98194	association	P0CK56
+P98194	association	P0CK58
+P98194	association	P13285
+P98194	association	P69901
+P98194	association	P06460
+P98194	association	P06461
+P98194	association	P06792
+P98194	association	P06927
+P98194	association	P0CK49
+Q12797	physical association	Q15198
+Q12797	association	P0C739
+Q12797	association	P0CK56
+Q12797	association	P69901
+Q12797	association	P03177
+Q12797	association	P03182
+Q12797	association	P03225
+Q12797	association	P06460
+Q12797	association	P06461
+Q12797	association	Q2MG95
+Q12797	association	P06792
+Q12797	association	P0CK49
+Q9BT22	association	P0CK56
+Q9BT22	association	P69901
+Q9BT22	association	P06460
+Q9BT22	association	P06792
+Q9UKA4	association	P0CK56
+Q13443	association	P0C739
+Q13443	association	P0CK56
+Q13443	association	P69901
+Q13443	association	P03182
+Q13443	association	P06461
+Q13443	association	P06792
+Q13443	association	P0CK49
+O95573	association	P05412
+O95573	association	P0CK56
+O95573	association	P69901
+O95573	association	P03182
+O95573	association	P03220
+O95573	association	P06460
+O95573	association	Q2MG95
+O95573	association	P06461
+Q8IXI2	association	O00716
+Q8IXI2	association	P69901
+Q8IXI2	association	Q2MG95
+Q8IXI2	association	P03182
+Q8IXI2	association	P06461
+Q8IXI2	association	P06792
+Q8IXI2	association	P0C739
+O95159	association	P69901
+O95159	association	Q2MG95
+O95159	association	P06460
+O95159	association	P06461
+Q93008	association	Q5U5Q3
+Q93008	association	Q13490
+Q93008	association	Q13489
+Q93008	association	Q2MG95
+Q93008	association	P03177
+Q93008	association	P03209
+Q5T4S7	physical association	P10124
+Q5T4S7	association	O35182
+Q5T4S7	physical association	O75400
+Q5T4S7	association	Q13490
+Q5T4S7	association	Q13489
+Q5T4S7	association	P60896
+Q5T4S7	association	P85037
+Q5T4S7	association	Q01167
+Q5T4S7	physical association	P03129
+Q5T4S7	physical association	P04020
+Q5T4S7	physical association	P06464
+Q5T4S7	association	P30119
+Q5T4S7	association	Q2MG95
+Q5T4S7	association	P03220
+Q5T4S7	association	P06430
+Q5T4S7	association	Q2MG97
+Q5T4S7	association	P06788
+Q5T4S7	association	P06932
+Q96RT7	association	P30119
+Q96RT7	association	Q2MG95
+Q96RT7	association	Q2MG97
+Q13049	physical association	P31947
+Q13049	physical association	P11684
+Q13049	association	Q2MG95
+Q9NUJ3	association	Q2MG95
+Q9UNE7	association	P60896
+Q9UNE7	physical association	Q9Y2U5
+Q9UNE7	physical association	Q9H4L4
+Q9UNE7	physical association	P08238
+Q9UNE7	physical association	Q00613
+Q9UNE7	physical association	P17066
+Q9UNE7	physical association	P11142
+Q9UNE7	physical association	P08107
+Q9UNE7	direct interaction	P38532-2
+Q9UNE7	association	Q2MG95
+Q9UNE7	association	P03179
+Q9UNE7	association	Q2PRM9
+Q9UNE7	association	Q8AZK7
+Q9UNE7	association	Q9DUG7
+Q9UNE7	physical association	P00711
+Q99442	association	Q2MG95
+Q99442	association	P06460
+Q99442	association	P06792
+Q99442	association	P06927
+Q9BV68	physical association	P53350
+Q9BV68	physical association	O95149
+Q9BV68	physical association	P67870
+Q9BV68	physical association	P35914
+Q9BV68	physical association	O95989
+Q9BV68	association	P60896
+Q9BV68	association	Q2MG95
+Q15434	association	Q2KRY6
+Q15434	association	Q2MG95
+P51148	association	P20963
+P51148	association	P0C739
+P51148	association	Q2MG95
+P51148	association	P03182
+P51148	association	P03246
+P51148	association	P06460
+P48556	physical association	O15198
+P48556	physical association	Q15796
+P48556	association	Q16186
+P48556	physical association	P55036
+P48556	association	P05412
+P48556	association	P32314
+P48556	association	O35593
+P48556	association	P13285
+P48556	association	Q2MG95
+P48556	association	P06463
+P48556	physical association	H9XIJ5
+P55036	physical association	P55036
+P55036	direct interaction	P0CG48
+P55036	direct interaction	P54725
+P55036	association	Q16186
+P55036	direct interaction	P54727
+P55036	direct interaction	Q9UMX0
+P55036	direct interaction	Q9UHD9
+P55036	physical association	P52701
+P55036	physical association	Q15369
+P55036	physical association	Q9BRX2
+P55036	physical association	Q9H816
+P55036	physical association	P55209
+P55036	physical association	P35998
+P55036	physical association	P43686
+P55036	physical association	P62191
+P55036	physical association	P17980
+P55036	physical association	P62195
+P55036	physical association	P25787
+P55036	physical association	P62333
+P55036	physical association	P28066
+P55036	physical association	P60900
+P55036	physical association	P25788
+P55036	physical association	O14818
+P55036	physical association	P20618
+P55036	physical association	Q99460
+P55036	physical association	Q99436
+P55036	physical association	Q13200
+P55036	physical association	O43242
+P55036	physical association	Q15008
+P55036	physical association	P48556
+P55036	physical association	O00231
+P55036	physical association	O00232
+P55036	physical association	Q9UNM6
+P55036	direct interaction	Q9Y5K5
+P55036	association	P05412
+P55036	direct interaction	Q84L32
+P55036	direct interaction	Q9SII8
+P55036	direct interaction	P48510
+P55036	direct interaction	Q62921
+P55036	association	O35593
+P55036	association	P0CK58
+P55036	association	P13285
+P55036	association	P30119
+P55036	association	P69901
+P55036	association	Q2MG95
+P55036	association	P06463
+O00232	association	Q99459
+O00232	association	Q13573
+O00232	association	Q16186
+O00232	association	Q9NWV8
+O00232	physical association	P55036
+O00232	association	P05412
+O00232	association	O35593
+O00232	association	Q2MG95
+P62333	association	Q16186
+P62333	association	Q99459
+P62333	association	Q13573
+P62333	physical association	P55036
+P62333	physical association	P62195
+P62333	association	P05412
+P62333	physical association	O00233
+P62333	physical association	P03255
+P62333	association	O35593
+P62333	association	P13285
+P62333	association	Q2MG95
+P62333	association	P06463
+P35998	association	Q99459
+P35998	association	Q13573
+P35998	physical association	P12757
+P35998	association	P60896
+P35998	association	Q16186
+P35998	association	Q9NWV8
+P35998	physical association	P55036
+P35998	physical association	P54727
+P35998	physical association	P54725
+P35998	physical association	P62195
+P35998	physical association	Q16401
+P35998	association	P05412
+P35998	association	P19838
+P35998	association	P04925
+P35998	association	Q8AZK7
+P35998	association	O35593
+P35998	association	P13285
+P35998	association	P30119
+P35998	association	P69901
+P35998	association	Q2MG95
+P35998	association	P03129
+P35998	association	P06463
+P28070	physical association	Q15797
+P28070	association	P60900
+P28070	association	O14818
+P28070	physical association	Q99436
+P28070	physical association	Q9Y244
+P28070	physical association	P28074
+P28070	association	P05412
+P28070	association	Q9UPW0
+P28070	association	Q9BZS1
+P28070	association	O35593
+P28070	association	P13285
+P28070	association	Q2MG95
+P28070	association	P06463
+P20618	association	P60900
+P20618	physical association	P49721
+P20618	physical association	P49720
+P20618	physical association	Q99436
+P20618	physical association	Q9Y244
+P20618	physical association	P28074
+P20618	colocalization	P27824
+P20618	physical association	P55036
+P20618	association	P05412
+P20618	association	O35593
+P20618	association	P13285
+P20618	association	Q2MG95
+P60900	association	P25789
+P60900	association	Q9Y244
+P60900	association	P25787
+P60900	association	P25788
+P60900	association	O14818
+P60900	association	P25786
+P60900	association	P28066
+P60900	association	Q99436
+P60900	association	P28072
+P60900	association	P28074
+P60900	association	P28070
+P60900	association	P49721
+P60900	association	P49720
+P60900	association	P20618
+P60900	direct interaction	P17861-1
+P60900	physical association	P55036
+P60900	physical association	Q16186
+P60900	physical association	Q9Y5K5
+P60900	physical association	Q00987
+P60900	association	P05412
+P60900	association	O35593
+P60900	association	P13285
+P60900	association	P30119
+P60900	association	Q2MG95
+P60900	association	P06463
+P25789	association	Q969U7
+P25789	association	P60900
+P25789	association	O14818
+P25789	physical association	Q9Y244
+P25789	physical association	P25787
+P25789	association	P05412
+P25789	association	O35593
+P25789	association	P13285
+P25789	association	Q2MG95
+P25789	association	P06463
+Q9Y520	association	P60896
+Q9Y520	physical association	P88991
+Q9Y520	association	Q2MG95
+Q9Y520	association	P03220
+P40855	direct interaction	P40855
+P40855	physical association	O96011
+P40855	physical association	P56589
+P40855	physical association	Q9Y5Y5
+P40855	physical association	O75381
+P40855	physical association	Q15796
+P40855	direct interaction	P28328
+P40855	direct interaction	Q92968
+P40855	direct interaction	Q7Z412
+P40855	direct interaction	P33897
+P40855	direct interaction	Q9NR77
+P40855	colocalization	P28288
+P40855	association	Q2MG95
+Q9HCH0	association	Q2MG95
+Q15334	association	Q2MG95
+Q9P266	association	Q2MG95
+Q9Y6M1	association	Q14197
+Q9Y6M1	association	P05412
+Q9Y6M1	association	Q2KRY6
+Q9Y6M1	association	Q2MG95
+Q9Y6M1	association	P03211
+Q7L5D6	physical association	P31749
+Q7L5D6	physical association	O43741
+Q7L5D6	physical association	O43681
+Q7L5D6	association	Q2MG95
+Q4L180	association	Q2MG95
+Q8IX21	association	Q2MG95
+Q9Y2G8	association	P0C739
+Q9Y2G8	association	P0CK58
+Q9Y2G8	association	P69901
+Q9Y2G8	association	Q2MG95
+Q9Y2G8	association	P06460
+Q9Y2G8	association	P06461
+Q9Y2G8	association	Q8AZK7
+Q9Y2G8	association	P06792
+Q9Y2G8	association	P06927
+P26196	association	Q99459
+P26196	association	P05412
+P26196	physical association	P03410
+P26196	association	Q2KRY6
+P26196	association	Q2MG95
+P26196	association	P03182
+A5YKK6	physical association	Q9HCJ0
+A5YKK6	association	Q99459
+A5YKK6	association	Q13573
+A5YKK6	physical association	Q9NZN8
+A5YKK6	physical association	O75175
+A5YKK6	physical association	Q9UFF9
+A5YKK6	physical association	P19793
+A5YKK6	physical association	P10828
+A5YKK6	association	P05412
+A5YKK6	physical association	P19785
+A5YKK6	association	Q2MG95
+O96005	association	P0C739
+O96005	association	P69901
+O96005	association	P06460
+O96005	association	Q2MG95
+O96005	association	P06792
+O96005	association	P06927
+Q9UL15	association	P03179
+Q9UL15	association	Q2MG95
+Q9UL15	association	Q2PRM9
+Q9UL15	association	Q8AZK7
+Q9UL15	association	Q9DUG7
+Q9NWV8	association	Q13573
+Q9NWV8	association	Q5VTR2
+Q9NWV8	association	Q9UNS2
+Q9NWV8	association	Q9BT78
+Q9NWV8	association	Q92905
+Q9NWV8	association	Q7L5N1
+Q9NWV8	association	Q9UBW8
+Q9NWV8	association	Q99627
+Q9NWV8	association	Q16531
+Q9NWV8	association	Q15018
+Q9NWV8	association	Q7Z6Z7
+Q9NWV8	association	Q9BRP4
+Q9NWV8	association	P62191
+Q9NWV8	association	P17980
+Q9NWV8	association	P43686
+Q9NWV8	association	P35998
+Q9NWV8	association	P62195
+Q9NWV8	association	O14818
+Q9NWV8	association	O75832
+Q9NWV8	association	O00231
+Q9NWV8	association	O00232
+Q9NWV8	association	O00487
+Q9NWV8	association	Q99460
+Q9NWV8	association	Q13200
+Q9NWV8	association	O43242
+Q9NWV8	association	Q16401
+Q9NWV8	association	Q15008
+Q9NWV8	association	P51665
+Q9NWV8	association	Q59EL2
+Q9NWV8	association	O00507
+Q9NWV8	association	Q2MG95
+P48047	physical association	Q8ND90
+P48047	association	P05412
+P48047	association	P0C739
+P48047	association	P06460
+P48047	association	Q2MG95
+P48047	association	P06792
+P48047	association	P06927
+P23634	association	P62258
+P23634	association	P01258
+P23634	physical association	Q13586
+P23634	physical association	P29476
+P23634	association	P0C739
+P23634	association	P0CK58
+P23634	association	P69901
+P23634	association	P03182
+P23634	association	P06460
+P23634	association	P06461
+P23634	association	Q2MG95
+P23634	association	Q8AZJ3
+P23634	association	P06792
+P23634	association	P06927
+Q6AI12	association	Q2MG95
+Q16186	association	P60896
+Q16186	association	Q5VYK3
+Q16186	association	P62333
+Q16186	association	P62191
+Q16186	association	P17980
+Q16186	association	P43686
+Q16186	association	P35998
+Q16186	association	P62195
+Q16186	association	O00231
+Q16186	association	O00232
+Q16186	association	Q9UNM6
+Q16186	association	O00487
+Q16186	association	O43242
+Q16186	association	P55036
+Q16186	association	Q15008
+Q16186	association	P51665
+Q16186	association	P48556
+Q16186	association	P61289
+Q16186	association	P04843
+Q16186	association	P04844
+Q16186	association	O75643
+Q16186	association	Q9UHD9
+Q16186	direct interaction	P54727
+Q16186	direct interaction	Q9UMX0
+Q16186	direct interaction	P0CG48
+Q16186	physical association	P60900
+Q16186	physical association	Q13200
+Q16186	physical association	Q9Y5K5
+Q16186	physical association	Q9Y5L4
+Q16186	physical association	P62258
+Q16186	physical association	Q06830
+Q16186	physical association	Q96IX5
+Q16186	physical association	O43684
+Q16186	physical association	O60220
+Q16186	direct interaction	Q99460
+Q16186	association	P05412
+Q16186	direct interaction	P48510
+Q16186	direct interaction	Q84L31
+Q16186	direct interaction	P32628
+Q16186	direct interaction	Q84L30
+Q16186	direct interaction	Q84L32
+Q16186	physical association	EBI-7712185
+Q16186	physical association	O35593
+Q16186	association	Q2MG95
+O94929	association	P0C739
+O94929	association	P0CK58
+O94929	association	P69901
+O94929	association	P06460
+O94929	association	Q2MG95
+O94929	association	Q8AZJ3
+P60903	association	P03225
+P40429	association	Q9UL18
+P40429	association	Q9UKV8
+P40429	association	Q5U5Q3
+P40429	association	P05412
+P40429	association	P69901
+P40429	association	P03177
+P40429	association	P03211
+P40429	association	P03225
+P40429	association	P06428
+P40429	association	P06461
+P40429	association	Q8AZK7
+P40429	association	Q8AZJ3
+P40429	association	P06927
+P40429	physical association	P03496
+Q6NZI2	association	P69901
+Q6NZI2	association	P03211
+Q6NZI2	association	P03225
+Q6NZI2	association	P06430
+Q6NZI2	association	P06461
+Q6NZI2	association	Q8AZJ3
+Q6NZI2	association	P06927
+O15031	physical association	P30519
+O15031	physical association	Q71F23
+O15031	physical association	O60925
+O15031	direct interaction	Q9H3S1
+O15031	association	P0C739
+O15031	association	P0CK58
+O15031	association	P13285
+O15031	association	P69901
+O15031	association	P03225
+O15031	association	P06460
+O15031	association	P06461
+O15031	association	Q8AZJ3
+O15031	association	P06792
+P35080	physical association	Q96H12
+P35080	association	P03177
+P35080	association	P03225
+P35080	association	P06428
+P35080	association	P06463
+P02794	physical association	P0CG48
+P02794	physical association	P02792
+P02794	physical association	Q2Q067

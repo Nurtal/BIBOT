@@ -236,7 +236,7 @@ def convert_SifFileToGDFfile(fileName):
 	"""
 	[IN PROGRESS]
 
-	-> Try on small files
+	-> Try on small files 
 
 	"""
 
@@ -322,7 +322,8 @@ convert_SifFileToGDFfile("monTest.sif")
 
 
 
-
+abstract = fetch_abstract(27755966)
+print abstract
 
 
 
