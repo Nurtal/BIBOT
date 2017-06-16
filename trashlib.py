@@ -321,10 +321,8 @@ k.show_pathway("hsa04064", keggid={"7535": "red"})
 #draw_InteractionGraph("P43403", "monTest.sif")
 #convert_SifFileToGDFfile("monTest.sif")
 
-
-
-abstract = fetch_abstract(27755966)
-print abstract
+#abstract = fetch_abstract(27755966)
+#print abstract
 
 
 
@@ -390,12 +388,18 @@ for db in data:
 #test = fetch_abstract(27045581)
 #print test
 
-#machin = get_ListOfArticles("B-Cell", 1000)
-#for pmid in machin:
-#	test = fetch_abstract(pmid)
-#	print "["+str(pmid)+"]\n"
-#	print test
 
+## Test get_ListOfArticles function
+print "[+] => Testing get_ListOfArticles function"
+machin = get_ListOfArticles("Lymphoma", 1000)
+for pmid in machin:
+	try:
+		test = fetch_abstract(pmid)
+		print "["+str(pmid)+"]\n"
+		print test
+	except:
+		print "[!] Can't read "+str(pmid)
+print "[*] => Test Done"
 
 
 
