@@ -64,7 +64,11 @@ def get_all_rules_from_file(data_file_name):
 
 def generate_querry_from_rule(rule):
 	"""
-	[IN PROGRESS]
+	-> Use the left and right members of a rule
+	   to generate a query in order to fetch abstracts
+	-> rule is a dict structure generate by the get_all_rules_from_file()
+	   function
+	-> return the query (a string)
 	"""
 
 	## Structure initialisation
@@ -78,12 +82,11 @@ def generate_querry_from_rule(rule):
 	left_terms = rule['left_terms']
 	right_terms = rule['right_terms']
 	
-	## Create first part of the querry, from
+	## Create first part of the query, from
 	## left termes of the rule
 	for element in left_terms:
 		element_in_array = element.split("=")
 		terms = element_in_array[0]
-
 		terms_in_array = terms.split(".")
 		terms_in_array = terms_in_array[1:] # drop the "X"
 
@@ -92,13 +95,13 @@ def generate_querry_from_rule(rule):
 				query_left_elements.append(term)
 
 
-	## Write the first part of the querry
+	## Write the first part of the query
 	for element in query_left_elements:
 		query_left_part += str(element) +" AND "
 	query_left_part = query_left_part[:-5]
 
 
-	## Create second part of the querry, from
+	## Create second part of the query, from
 	## right terms of the rule
 	for element in right_terms:
 		element_in_array = element.split("=")
@@ -112,7 +115,7 @@ def generate_querry_from_rule(rule):
 				query_right_elements.append(term)
 
 
-	## Write the first part of the querry
+	## Write the first part of the query
 	for element in query_right_elements:
 		query_right_part += str(element) +" AND "
 	query_right_part = query_right_part[:-5]
@@ -127,7 +130,6 @@ def generate_querry_from_rule(rule):
 
 
 ### TEST SPACE ###
-machin = get_all_rules_from_file("HLA_phase1_all_rules_filtered.txt")
-test_rule = machin[5]
-
-generate_querry_from_rule(test_rule)
+#machin = get_all_rules_from_file("HLA_phase1_all_rules_filtered.txt")
+#test_rule = machin[5]
+#generate_querry_from_rule(test_rule)
