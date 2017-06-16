@@ -22,7 +22,8 @@ def fetch_abstract(pmid):
 	(can happen when article is in chinese)
 	"""
 	handle = efetch(db='pubmed', id=pmid, retmode='xml', )
-	xml_data = read(handle)[0]
+	xml_data = read(handle)
+	xml_data = xml_data['PubmedArticle'][0]
 
 	try:
 		article = xml_data['MedlineCitation']['Article']

@@ -24,8 +24,9 @@ def fetch_abstract(pmid):
 	(can happen when article is in chinese)
 	"""
 	handle = efetch(db='pubmed', id=pmid, retmode='xml', )
-	xml_data = read(handle)[0]
-
+	xml_data = read(handle)
+	xml_data = xml_data['PubmedArticle'][0]
+	
 	try:
 		article = xml_data['MedlineCitation']['Article']
 		abstract = article['Abstract']['AbstractText'][0]
@@ -318,7 +319,7 @@ k.show_pathway("hsa04064", keggid={"7535": "red"})
 
 
 #draw_InteractionGraph("P43403", "monTest.sif")
-convert_SifFileToGDFfile("monTest.sif")
+#convert_SifFileToGDFfile("monTest.sif")
 
 
 
