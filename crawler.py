@@ -18,7 +18,7 @@ def gather_doc_rules():
 
 		result_file = open("results/abstract_for_rule_"+str(cmpt)+".txt", "w")
 		query = rules_manager.generate_querry_from_rule(rule)
-		pmid_list = bibliosearch.get_ListOfArticles(query, 1500)
+		pmid_list = bibliosearch.get_ListOfArticles(query, 50)
 		for pmid in pmid_list:
 			try:
 				test = bibliosearch.fetch_abstract(pmid)
@@ -30,6 +30,8 @@ def gather_doc_rules():
 				result_file.write("[!] Can't read "+str(pmid)+"\n")
 				print "[!] Can't read "+str(pmid)
 		result_file.close()
+
+		cmpt += 1
 
 
 ### TEST SPACE ###
