@@ -97,7 +97,7 @@ def generate_querry_from_rule(rule):
 
 	## Write the first part of the query
 	for element in query_left_elements:
-		query_left_part += str(element) +" AND "
+		query_left_part += str(element) +" OR "
 	query_left_part = query_left_part[:-5]
 
 
