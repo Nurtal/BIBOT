@@ -24,6 +24,11 @@ http://www.nltk.org/book/ch07.html
  -> Working on it with nltk
 3) Reason on parsed abstract
 
-# Requirements:
+## Requirements:
 Biopython
 nltk
+Microsoft Visual C++ 9 under windows
+
+## Installation:
+pip install biopython
+pip install bioservices
