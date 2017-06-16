@@ -117,12 +117,12 @@ def generate_querry_from_rule(rule):
 
 	## Write the first part of the query
 	for element in query_right_elements:
-		query_right_part += str(element) +" AND "
-	query_right_part = query_right_part[:-5]
+		query_right_part += str(element) +" OR "
+	query_right_part = query_right_part[:-4]
 
 	## Merge the 2 parts of the query
 	if(len(query_right_part) > 0):
-		final_query = query_left_part +" AND "+query_right_part
+		final_query = query_left_part +" OR "+query_right_part
 
 	return final_query
 

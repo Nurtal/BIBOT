@@ -13,11 +13,12 @@ def gather_doc_rules():
 
 	rules = rules_manager.get_all_rules_from_file("HLA_phase1_all_rules_filtered.txt")
 	for rule in rules.values():
-		query = generate_querry_from_rule(rule)
+		query = rules_manager.generate_querry_from_rule(rule)
 		pmid_list = bibliosearch.get_ListOfArticles(query, 1500)
-		for pmid in machin:
+		print pmid_list
+		for pmid in pmid_list:
 			try:
-				test = fetch_abstract(pmid)
+				test = bibliosearch.fetch_abstract(pmid)
 				print "["+str(pmid)+"]\n"
 				print test
 			except:
