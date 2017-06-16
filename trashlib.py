@@ -385,7 +385,7 @@ for db in data:
 
 ## Test get_ListOfArticles function
 print "[+] => Testing get_ListOfArticles function"
-machin = get_ListOfArticles("Lymphoma AND B-cells", 1000)
+machin = get_ListOfArticles("HLA", 4000)
 for pmid in machin:
 	try:
 		test = fetch_abstract(pmid)

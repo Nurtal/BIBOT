@@ -61,6 +61,73 @@ def get_all_rules_from_file(data_file_name):
 
 
 
+
+def generate_querry_from_rule(rule):
+	"""
+	[IN PROGRESS]
+	"""
+
+	## Structure initialisation
+	query_left_part = ""
+	query_left_elements = []
+	query_right_part = ""
+	query_right_elements = []
+	final_query = ""
+
+	## Get information
+	left_terms = rule['left_terms']
+	right_terms = rule['right_terms']
+	
+	## Create first part of the querry, from
+	## left termes of the rule
+	for element in left_terms:
+		element_in_array = element.split("=")
+		terms = element_in_array[0]
+
+		terms_in_array = terms.split(".")
+		terms_in_array = terms_in_array[1:] # drop the "X"
+
+		for term in terms_in_array:
+			if(term not in query_left_elements):
+				query_left_elements.append(term)
+
+
+	## Write the first part of the querry
+	for element in query_left_elements:
+		query_left_part += str(element) +" AND "
+	query_left_part = query_left_part[:-5]
+
+
+	## Create second part of the querry, from
+	## right terms of the rule
+	for element in right_terms:
+		element_in_array = element.split("=")
+		terms = element_in_array[0]
+
+		terms_in_array = terms.split(".")
+		terms_in_array = terms_in_array[1:] # drop the "X"
+
+		for term in terms_in_array:
+			if(term not in query_right_elements and term not in query_left_elements):
+				query_right_elements.append(term)
+
+
+	## Write the first part of the querry
+	for element in query_right_elements:
+		query_right_part += str(element) +" AND "
+	query_right_part = query_right_part[:-5]
+
+	## Merge the 2 parts of the query
+	if(len(query_right_part) > 0):
+		final_query = query_left_part +" AND "+query_right_part
+
+	return final_query
+
+
+
+
 ### TEST SPACE ###
 machin = get_all_rules_from_file("HLA_phase1_all_rules_filtered.txt")
-print machin
+test_rule = machin[5]
+
+generate_querry_from_rule(test_rule)
