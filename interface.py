@@ -4,6 +4,7 @@ Graphical Interface for BIBOT
 
 
 from Tkinter import *
+#import ImageTk
 from bibliosearch import *
 import input_parser
 import generate_report
@@ -50,6 +51,8 @@ def search(query, query_type):
 """Interface"""
 
 root = Tk()
+#img = ImageTk.PhotoImage(Image.open("bibot_logo.png"))
+
 root.title('BIBOT Interface')
 root['bg']='white'
 
@@ -70,7 +73,7 @@ Frame3.pack(side=RIGHT, padx=30, pady=30)
 
 Label(Frame1, text="Gene Info").pack(padx=10, pady=10)
 Label(Frame2, text="Biblio Search").pack(padx=10, pady=10)
-Label(Frame3, text="Frame 3").pack(padx=10, pady=10)
+Label(Frame3, text="Options").pack(padx=10, pady=10)
 
 
 ## Gene information Frame
@@ -101,17 +104,20 @@ Radiobutton(Frame2, text="Other", variable=fetch_settings, value=3).pack(anchor=
 value = StringVar() 
 value.set("Your Search")
 entree = Entry(Frame2, textvariable=value, width=10)
-searchButton = Button(Frame2, text='Search', command=lambda x=2:search(value.get(), fetch_settings.get()))	
+button_search = Button(Frame2, text='Search', command=lambda x=2:search(value.get(), fetch_settings.get()))	
 button_report = Button(Frame2, text='Report', state=DISABLED, command=lambda x=0:generate_report.write_abstract_report())
 
-
-qb = Button(Frame3, text='Quitter', command=root.quit)
-
-
 entree.pack()
-searchButton.pack()
+button_search.pack()
 button_report.pack()
-qb.pack()
+
+
+## General Settings & Quit Button
+button_settings = Button(Frame3, text='Settings', command=root.quit)
+button_quit = Button(Frame3, text='Quitter', command=root.quit)
+
+button_settings.pack()
+button_quit.pack()
 
 root.mainloop()
 
