@@ -44,7 +44,8 @@ def search_parser(query, query_type):
 		gene_id = gene_info["hits"][0]["_id"]
 
 		## Write results in a data file
-		## <choucroute> separateur
+		## <choucroute> separateur, beacause random
+		## charachters always present in gene name
 		output_file = open("fetched/gene_information.csv", "w")
 		output_file.write("name<choucroute>"+str(gene_name)+"\n")
 		output_file.write("symbol<choucroute>"+str(gene_symbol)+"\n")

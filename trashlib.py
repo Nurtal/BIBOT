@@ -423,6 +423,8 @@ for sentence in sentences:
 """
 
 ## Test mygene module
+"""
 mg = mygene.MyGeneInfo()
 truc = mg.query('NRAS', size=1)
 print truc["hits"][0]
+"""
