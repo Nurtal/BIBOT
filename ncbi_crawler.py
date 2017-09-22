@@ -38,6 +38,7 @@ def fetch_abstract(pmid):
 def fetch_article(pmid):
 	"""
 	Test function
+	=> Not working
 	"""
 	handle = efetch(db='pubmed', id=pmid, retmode='xml', )
 	xml_data = read(handle)[0]
@@ -62,3 +63,5 @@ def get_ListOfArticles(term, max_count):
 
 
 	return listOfArticles;
+
+

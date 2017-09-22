@@ -12,6 +12,9 @@ import os
 
 from bioservices import *
 
+import mygene
+
+
 Entrez.email = 'murlock.raspberypi@gmail.com'
 
 
@@ -299,14 +302,12 @@ def convert_SifFileToGDFfile(fileName):
 """
 TEST SPACE
 """
-print "------[TEST SPACE]------\n"
-
 """
+print "------[TEST SPACE]------\n"
 machin = get_ListOfDirectInteraction("P43403", "P06239")
 print "-------------------------------------------------------"
 print machin
 """
-
 
 """
 k = KEGG(verbose=False)
@@ -383,9 +384,11 @@ for db in data:
 #print test
 
 
+
 ## Test get_ListOfArticles function
+"""
 print "[+] => Testing get_ListOfArticles function"
-machin = get_ListOfArticles("HLA", 4000)
+machin = get_ListOfArticles("HLA", 100)
 for pmid in machin:
 	try:
 		test = fetch_abstract(pmid)
@@ -394,7 +397,7 @@ for pmid in machin:
 	except:
 		print "[!] Can't read "+str(pmid)
 print "[*] => Test Done"
-
+"""
 
 
 """
@@ -418,3 +421,8 @@ for sentence in sentences:
 	result = cp.parse(sentence)
 	result.draw()
 """
+
+## Test mygene module
+mg = mygene.MyGeneInfo()
+truc = mg.query('NRAS', size=1)
+print truc["hits"][0]
