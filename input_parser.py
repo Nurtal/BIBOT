@@ -4,11 +4,13 @@ input from the user.
 """
 
 import ncbi_crawler
+import kegg_crawler
 import mygene
+import settings
 
 def search_parser(query, query_type):
 	"""
-	-> In progress
+	[IN PROGRESS]
 	"""
 
 	##-----------------------------------##
@@ -16,8 +18,11 @@ def search_parser(query, query_type):
 	##-----------------------------------##
 	if(query_type == 1):
 		
+		## Get the parameters for the search
+		parameters = settings.read_settings()
+
 		## get list of PMID
-		list_of_articles = ncbi_crawler.get_ListOfArticles(query, 10)
+		list_of_articles = ncbi_crawler.get_ListOfArticles(query, parameters['max_abstract_return'])
 
 		## Write results in a data file
 		output_file = open("fetched/pubmed_abstract.txt", "w")
@@ -37,15 +42,40 @@ def search_parser(query, query_type):
 		## Collect information
 		mg = mygene.MyGeneInfo()
 		gene_info = mg.query(query, size=1)
-		gene_name = gene_info["hits"][0]["name"]
-		gene_symbol = gene_info["hits"][0]["symbol"]
-		gene_taxid = gene_info["hits"][0]["taxid"]
-		gene_entrez = gene_info["hits"][0]["entrezgene"]
-		gene_id = gene_info["hits"][0]["_id"]
+
+		## Check if we found something
+		if(len(gene_info["hits"]) > 0):
+			gene_name = gene_info["hits"][0]["name"]
+			gene_symbol = gene_info["hits"][0]["symbol"]
+			gene_taxid = gene_info["hits"][0]["taxid"]
+			gene_entrez = gene_info["hits"][0]["entrezgene"]
+			gene_id = gene_info["hits"][0]["_id"]
+
+			##-------------------------##
+			## Get Protein Information ## 
+			##-------------------------##
+			write_protein_information(gene_entrez)
+
+			##-----------------------##
+			## Get Pathways Involved ##
+			##-----------------------##
+			pathways_fetched = kegg_crawler.get_involved_pathways(gene_entrez)
+			pathways_file = open("fetched/pathways_involved.csv", "w")
+			for pathway in pathways_fetched:
+				pathways_file.write(pathway+","+pathways_fetched[pathway]+"\n")
+			pathways_file.close()
+
+
+		else:
+			gene_name = "No Gene Found"
+			gene_symbol = "Nothing Found"
+			gene_taxid = "Nothing Found"
+			gene_entrez = "Nothing Found"
+			gene_id = "Nothing Found"
 
 		## Write results in a data file
 		## <choucroute> separateur, beacause random
-		## charachters always present in gene name
+		## char always present in gene name
 		output_file = open("fetched/gene_information.csv", "w")
 		output_file.write("name<choucroute>"+str(gene_name)+"\n")
 		output_file.write("symbol<choucroute>"+str(gene_symbol)+"\n")
@@ -65,3 +95,20 @@ def search_parser(query, query_type):
 	##---------------------------------##
 	else:
 		print "What do you looking for ?"
+
+
+
+def write_protein_information(entrez_gene_id):
+	"""
+	IN PROGRESS
+	"""
+	from PyEntrezId import Conversion
+
+	# include your email address
+	Id = Conversion('dummyemail@dummybunny.info')
+	UniProtId = Id.convert_entrez_to_uniprot(entrez_gene_id)
+	
+	## Write results in file
+	output_file = open("fetched/protein_information.csv", "w")
+	output_file.write("uniprot_id,"+str(UniProtId)+"\n")
+	output_file.close()

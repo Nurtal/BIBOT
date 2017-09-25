@@ -37,6 +37,22 @@ def get_ListOfCommunPathway(elt1, elt2):
 	return list_OfCommunPathway
 
 
+def get_involved_pathways(gene_id):
+	"""
+	-> Create a connection to the KEGG database,
+	   return a list of pathways (with id) where the
+	   gene_id (entrez stuff) is involved
+	-> "hsa" is the human reference for the KEGG database
+	"""
+	k = KEGG(verbose=False)
+	pathways = k.get_pathway_by_gene(str(gene_id), "hsa")
+
+	return pathways
+
+
+
+
+
 
 
 ##---------------------------------------------------##

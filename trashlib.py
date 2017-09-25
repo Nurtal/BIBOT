@@ -309,13 +309,11 @@ print "-------------------------------------------------------"
 print machin
 """
 
-"""
-k = KEGG(verbose=False)
-k.find("hsa", "zap70")
-pathway = k.get_pathway_by_gene("7535", "hsa")
-print pathway
-k.show_pathway("hsa04064", keggid={"7535": "red"})
-"""
+#k = KEGG(verbose=False)
+#truc = k.find("hsa", "zap70")
+#pathway = k.get_pathway_by_gene("1956", "hsa")
+#print pathway
+#k.show_pathway("hsa05218", keggid={"1956": "red"})
 
 
 

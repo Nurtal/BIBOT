@@ -45,6 +45,7 @@ http://www.nltk.org/book/ch07.html
 Biopython
 nltk
 mygene 3.0.0 (python module)
+PyEntrezId 1.5.8
 Microsoft Visual C++ 9 under windows
 
 ## Installation:
