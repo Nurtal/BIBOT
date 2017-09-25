@@ -8,6 +8,7 @@ from Tkinter import *
 from bibliosearch import *
 import input_parser
 import generate_report
+import settings
 
 
 """Test Stuff"""
@@ -46,38 +47,6 @@ def search(query, query_type):
 		data_file.close()
 
 
-
-def open_settings():
-	"""
-	Work in Progress
-	"""
-
-	## General 
-	settings_window = Toplevel(root)
-	settings_window.title('BIBOT Settings')
-
-	## Frame 1 - NCBI search settings
-	SettingsFrame1 = Frame(settings_window, borderwidth=2, relief=GROOVE)
-	Label(SettingsFrame1, text="NCBI").pack(padx=10, pady=10)
-	value = IntVar()
-	value.set(5)
-	Label(SettingsFrame1, text="Maximum number of \n abstracts to return").pack()
-	entree = Entry(SettingsFrame1, textvariable=value, width=10)
-	entree.pack()
-	SettingsFrame1.pack(side=LEFT, padx=30, pady=30)
-
-	## Frame 2 - Save & Quit
-	SettingsFrame2 = Frame(settings_window, borderwidth=2, relief=GROOVE)
-	Label(SettingsFrame2, text="Save & Quit").pack(padx=10, pady=10)
-	button_save = Button(SettingsFrame2, text='Save', command=settings_window.quit)
-	button_default = Button(SettingsFrame2, text='Default', command=settings_window.quit)
-	button_quit = Button(SettingsFrame2, text='Quitter', command=settings_window.quit)
-
-	button_save.pack()
-	button_default.pack()
-	button_quit.pack()
-
-	SettingsFrame2.pack(side=LEFT, padx=30, pady=30)
 
 
 
@@ -146,7 +115,7 @@ button_report.pack()
 
 
 ## General Settings & Quit Button
-button_settings = Button(Frame3, text='Settings', command=open_settings)
+button_settings = Button(Frame3, text='Settings', command=lambda x=1:settings.open_settings(root))
 button_quit = Button(Frame3, text='Quitter', command=root.quit)
 
 button_settings.pack()
