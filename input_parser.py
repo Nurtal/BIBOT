@@ -112,3 +112,11 @@ def write_protein_information(entrez_gene_id):
 	output_file = open("fetched/protein_information.csv", "w")
 	output_file.write("uniprot_id,"+str(UniProtId)+"\n")
 	output_file.close()
+
+
+def show_pathway_involved(pathway_name):
+	"""
+	-> Wrapper around the show_pathway function
+	   from the kegg_crawler file
+	"""
+	kegg_crawler.show_pathway(pathway_name)

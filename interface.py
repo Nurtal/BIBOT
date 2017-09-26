@@ -9,12 +9,56 @@ from bibliosearch import *
 import input_parser
 import generate_report
 import settings
+import webbrowser
+
 
 
 """Test Stuff"""
 
 def testFunction(machin):
 	print "Testing "+str(machin)
+
+
+def open_uniprot_page():
+	"""
+	-> open the uniprot entry (web page)
+	   for the uniprot_id
+	"""
+
+	## Get the uniprot ID
+	uniprot_id = "undef"
+	protein_data_file = open("fetched/protein_information.csv", "r")
+	for line in protein_data_file:
+		line = line.replace("\n", "")
+		line_in_array = line.split(",")
+		if(line_in_array[0] == "uniprot_id"):
+			uniprot_id = line_in_array[1]
+	protein_data_file.close()
+
+	## open page
+	webbrowser.open("http://www.uniprot.org/uniprot/"+str(uniprot_id))
+
+
+def open_mint_page():
+	"""
+	-> open the mint entry (web page)
+	   for the uniprot_id
+	"""
+
+	## Get the uniprot ID
+	uniprot_id = "undef"
+	protein_data_file = open("fetched/protein_information.csv", "r")
+	for line in protein_data_file:
+		line = line.replace("\n", "")
+		line_in_array = line.split(",")
+		if(line_in_array[0] == "uniprot_id"):
+			uniprot_id = line_in_array[1]
+	protein_data_file.close()
+
+	## open page
+	url_address = "http://mint.bio.uniroma2.it/cgi-bin/advResults.py?proteinGeneName=0&protein="+str(uniprot_id)+"&taxon=Homo%20sapiens&interaction=0&interactionType=0&methods=0&uniprot=0&pmid=0http://mint.bio.uniroma2.it/cgi-bin/advResults.py?proteinGeneName=0&protein=P01111&taxon=Homo%20sapiens&interaction=0&interactionType=0&methods=0&uniprot=0&pmid=0"
+	webbrowser.open(url_address)
+
 
 
 def search(query, query_type):
@@ -46,6 +90,8 @@ def search(query, query_type):
 				label_gene_id["text"] = "id : "+str(line_in_array[1])
 		data_file.close()
 
+		## Clean list of current Pathways involved
+		listbox_pathways.delete(0, END)
 
 		## Add Pathways involved information
 		pathways_file = open("fetched/pathways_involved.csv", "r")
@@ -68,6 +114,16 @@ def search(query, query_type):
 			if(line_in_array[0] == "uniprot_id"):
 				label_uniprotId["text"] = "UniProt ID : "+str(line_in_array[1])
 		protein_data_file.close()
+
+
+def display_pathway(pathway_name):
+	"""
+	-> Wrapper around the show_pathway_involved function
+	  from the input_parser file
+	"""
+	input_parser.show_pathway_involved(pathway_name)
+
+
 
 
 """Interface"""
@@ -131,6 +187,13 @@ label_gene_id.pack()
 ## A few label describing the protein
 label_uniprotId = Label(Frame3, text="UniProt ID : NA")
 label_uniprotId.pack()
+## Open the Uniprot entry
+button_uniprot = Button(Frame3, text='Uniprot Entry', command=lambda x=1:open_uniprot_page())
+button_uniprot.pack()
+## Open the mint entry
+button_mint = Button(Frame3, text='Mint Entry', command=lambda x=1:open_mint_page())
+button_mint.pack()
+
 
 
 ## Settings for the online
@@ -154,22 +217,19 @@ button_search.pack()
 button_report.pack()
 
 ## Involved Pathways
-## IN PROGRESS
+## Scrollable listbox of pathways
 scrollbar_y = Scrollbar(Frame4)
 scrollbar_y.pack(side='right', fill='y')
-
 scrollbar_x = Scrollbar(Frame4,  orient=HORIZONTAL)
 scrollbar_x.pack(side='bottom', fill='x')
-
-
 listbox_pathways = Listbox(Frame4, bg='white', yscrollcommand=scrollbar_y.set)
 scrollbar_y.config(command=listbox_pathways.yview)
 scrollbar_x.config(command=listbox_pathways.xview)
-
-#scrollbar = Scrollbar(listbox_pathways, orient=VERTICAL)
-#scrollbar.pack()
 listbox_pathways.pack()
 
+## Show Button
+button_show = Button(Frame4, text='Show', command=lambda x=1:display_pathway(listbox_pathways.get(listbox_pathways.curselection())))	
+button_show.pack()
 
 
 

@@ -50,7 +50,42 @@ def get_involved_pathways(gene_id):
 	return pathways
 
 
+def show_pathway(pathway_name):
+	"""
+	-> Display pathway using KEGG database
+	-> Retrieve gene id in gene_information.csv
+	-> Retrieve pathway id from pathway name in pathways_involved.csv
+	IN PROGRESS
+	"""
+	k = KEGG(verbose=False)
 
+	pathway_id = "undef"
+	gene_id = "undef"
+
+	## Get pathway ID
+	pathway_file = open("fetched/pathways_involved.csv", "r")
+	for line in pathway_file:
+		line = line.replace("\n", "")
+		line_in_array = line.split(",")
+		if(line_in_array[1] == pathway_name):
+			pathway_id = line_in_array[0]
+	pathway_file.close()
+
+	## Get gene ID
+	gene_file = open("fetched/gene_information.csv", "r")
+	for line in gene_file:
+		line = line.replace("\n", "")
+		line_in_array = line.split("<choucroute>") # Yep
+		if(line_in_array[0] == "entrezgene"):
+			gene_id = line_in_array[1]
+	gene_file.close()
+
+	## Show the figure
+	if(gene_id != "undef" and pathway_id != "undef"):
+		k.show_pathway(str(pathway_id), keggid={str(gene_id): "red"})
+
+
+	
 
 
 
