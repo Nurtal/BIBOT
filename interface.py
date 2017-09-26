@@ -5,6 +5,7 @@ Graphical Interface for BIBOT
 
 from Tkinter import *
 #import ImageTk
+from PIL import ImageTk, Image
 from bibliosearch import *
 import input_parser
 import generate_report
@@ -138,35 +139,50 @@ root['bg']='white'
 
 # frame 1
 Frame1 = Frame(root, borderwidth=2, relief=GROOVE)
-Frame1.grid(column=0, row=1)
+Frame1.grid(column=0, row=1, padx=25, pady=25)
 
 # frame 2
 Frame2 = Frame(root, borderwidth=2, relief=GROOVE)
-Frame2.grid(column=1, row=1)
+Frame2.grid(column=1, row=1, padx=25, pady=25)
 
 # frame 3
 Frame3 = Frame(root, borderwidth=2, relief=GROOVE)
-Frame3.grid(column=2, row=1)
+Frame3.grid(column=2, row=1, padx=25, pady=25)
 
 ## Frame 4
 Frame4 = Frame(root, borderwidth=2, relief=GROOVE)
-Frame4.grid(column=0, row=2)
+Frame4.grid(column=0, row=2, padx=25, pady=25)
 
 ## Frame 5
 Frame5 = Frame(root, borderwidth=2, relief=GROOVE)
-Frame5.grid(column=1, row=2)
+Frame5.grid(column=1, row=2, padx=25, pady=25)
 
 ## Frame 6
 Frame6 = Frame(root, borderwidth=2, relief=GROOVE)
-Frame6.grid(column=2, row=2)
+Frame6.grid(column=2, row=2, padx=25, pady=25)
 
-Label(Frame1, text="Gene Information").pack(padx=10, pady=10)
-Label(Frame2, text="Biblio Search").pack(padx=10, pady=10)
-Label(Frame3, text="Protein Information").pack(padx=10, pady=10)
-Label(Frame4, text="Involved Pathways").pack(padx=10, pady=10)
-Label(Frame5, text="General Options").pack(padx=10, pady=10)
+## Frame 7
+Frame7 = Frame(root, borderwidth=2, relief=GROOVE)
+Frame7.grid(column=0, row=3, padx=25, pady=25)
+
+## Frame 8
+Frame8 = Frame(root, borderwidth=2, relief=GROOVE)
+Frame8.grid(column=1, row=3, padx=25, pady=25)
+
+## Frame 9
+Frame9 = Frame(root, borderwidth=2, relief=GROOVE)
+Frame9.grid(column=2, row=3, padx=25, pady=25)
+
+
+Label(Frame1, text=" GENE INFORMATIONS ").pack(padx=10, pady=10)
+Label(Frame2, text="BIBLIO INFORMATIONS").pack(padx=10, pady=10)
+Label(Frame3, text="PROTEIN INFORMATIONS").pack(padx=10, pady=10)
+Label(Frame4, text="WORK IN PROGRESS").pack(padx=10, pady=10)
+#Label(Frame5, text="WORK IN PROGRESS").pack(padx=10, pady=10)
 Label(Frame6, text="WORK IN PROGRESS").pack(padx=10, pady=10)
-
+Label(Frame7, text="INVOLVED PATHWAYS").pack(padx=10, pady=10)
+Label(Frame8, text=" GENERAL OPTIONS ").pack(padx=10, pady=10)
+Label(Frame9, text="WORK IN PROGRESS").pack(padx=10, pady=10)
 
 ## Gene information Frame
 ## A few Labels describing the gene
@@ -218,33 +234,56 @@ button_report.pack()
 
 ## Involved Pathways
 ## Scrollable listbox of pathways
-scrollbar_y = Scrollbar(Frame4)
+scrollbar_y = Scrollbar(Frame7)
 scrollbar_y.pack(side='right', fill='y')
-scrollbar_x = Scrollbar(Frame4,  orient=HORIZONTAL)
+scrollbar_x = Scrollbar(Frame7,  orient=HORIZONTAL)
 scrollbar_x.pack(side='bottom', fill='x')
-listbox_pathways = Listbox(Frame4, bg='white', yscrollcommand=scrollbar_y.set)
+listbox_pathways = Listbox(Frame7, bg='white', yscrollcommand=scrollbar_y.set)
 scrollbar_y.config(command=listbox_pathways.yview)
 scrollbar_x.config(command=listbox_pathways.xview)
 listbox_pathways.pack()
 
 ## Show Button
-button_show = Button(Frame4, text='Show', command=lambda x=1:display_pathway(listbox_pathways.get(listbox_pathways.curselection())))	
+button_show = Button(Frame7, text='Show', command=lambda x=1:display_pathway(listbox_pathways.get(listbox_pathways.curselection())))	
 button_show.pack()
 
 
-
-
-
-
-
-
-
 ## General Settings & Quit Button
-button_settings = Button(Frame5, text='Settings', command=lambda x=1:settings.open_settings(root))
-button_quit = Button(Frame5, text='Quitter', command=root.quit)
-
+button_settings = Button(Frame8, text='Settings', command=lambda x=1:settings.open_settings(root))
+button_quit = Button(Frame8, text='Quitter', command=root.quit)
 button_settings.pack()
 button_quit.pack()
+
+## Center Frame 
+## include image
+## Main Search -- IN PROGRESS
+img = ImageTk.PhotoImage(Image.open("bibot_logo_small.png"))
+panel = Label(Frame5, image = img)
+panel.grid(column=1, row=0)
+
+general_search = StringVar() 
+general_search.set("WORK IN PROGRESS")
+entree = Entry(Frame5, textvariable=general_search, width=18)
+entree.grid(column=1, row=1)
+
+
+fetch_settings_general = IntVar()
+fetch_settings_general.set(0)
+radiobutton_option_1 = Radiobutton(Frame5, text="Abstract", variable=fetch_settings_general, value=1)
+radiobutton_option_2 = Radiobutton(Frame5, text="Gene", variable=fetch_settings_general, value=2)
+radiobutton_option_3 = Radiobutton(Frame5, text="Other", variable=fetch_settings_general, value=3)
+
+radiobutton_option_1.grid(column=0, row=2)
+radiobutton_option_2.grid(column=1, row=2)
+radiobutton_option_3.grid(column=2, row=2)
+
+button_search_general = Button(Frame5, text='UNDEF', command=lambda x=2:search(value.get(), fetch_settings.get()))	
+button_report_general = Button(Frame5, text='UNDEF', state=DISABLED, command=lambda x=0:generate_report.write_abstract_report())
+button_random_general = Button(Frame5, text='UNDEF', command=lambda x=2:search(value.get(), fetch_settings.get()))	
+
+button_search_general.grid(column=0, row=3)
+button_report_general.grid(column=1, row=3)
+button_random_general.grid(column=2, row=3)
 
 root.mainloop()
 
