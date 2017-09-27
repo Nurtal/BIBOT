@@ -11,7 +11,9 @@ import input_parser
 import generate_report
 import settings
 import webbrowser
-
+import voice
+import os.path
+import os
 
 
 """Test Stuff"""
@@ -68,7 +70,20 @@ def search(query, query_type):
 	from input_parser
 	"""
 	input_parser.search_parser(query, query_type)
-	button_report['state'] = "normal"
+	button_report_general['state'] = "normal"
+
+	## Get Biblio information
+	if(query_type == 1):
+
+		## get number of abstract found
+		number_of_abstract_returned = 0
+		abstract_file_fetched = open("fetched/pubmed_abstract.txt", "r")
+		for line in abstract_file_fetched:
+			line = line.replace("\n", "")
+			if(line[0] == ">"):
+				number_of_abstract_returned += 1
+		abstract_file_fetched.close()
+		label_abstract_found["text"] = "Abstract Found : "+str(number_of_abstract_returned)
 
 	## Get gene information
 	if(query_type == 2):
@@ -112,8 +127,11 @@ def search(query, query_type):
 			line_in_array = line.split(",")
 
 			## Update protein label
+			## Update buttun state
 			if(line_in_array[0] == "uniprot_id"):
 				label_uniprotId["text"] = "UniProt ID : "+str(line_in_array[1])
+				button_uniprot["state"] = "normal"
+				button_mint["state"] = "normal"
 		protein_data_file.close()
 
 
@@ -123,6 +141,48 @@ def display_pathway(pathway_name):
 	  from the input_parser file
 	"""
 	input_parser.show_pathway_involved(pathway_name)
+
+
+
+def reset_search():
+	"""
+	IN PROGRESS
+	"""
+
+	## Reset Gene Information
+	label_gene_name["text"] = "Name : NA"
+	label_gene_symbol["text"] = "Symbol : NA"
+	label_gene_taxid["text"] = "Taxid : NA"
+	label_gene_entrez["text"] = "Entrez-Gene : NA"
+	label_gene_id["text"] = "id : NA"
+
+	## Delete gene info file
+	if(os.path.exists("fetched/gene_information.csv")):
+		os.remove("fetched/gene_information.csv")
+
+	## Clean list of current Pathways involved
+	listbox_pathways.delete(0, END)
+
+	## Delete Pathway file
+	if(os.path.exists("fetched/pathways_involved.csv")):
+		os.remove("fetched/pathways_involved.csv")
+
+	## Reset Protein information
+	label_uniprotId["text"] = "UniProt ID : NA"
+	button_uniprot["state"] = "disabled"
+	button_mint["state"] = "disabled"
+
+	## Delete Protein file
+	if(os.path.exists("fetched/protein_information.csv")):
+		os.remove("fetched/protein_information.csv")
+
+	## Reset abstract info
+	label_abstract_found["text"] = "Abstract Found : NA"
+
+	## Delete abstract file
+	if(os.path.exists("fetched/pubmed_abstract.txt")):
+		os.remove("fetched/pubmed_abstract.txt")
+
 
 
 
@@ -179,7 +239,7 @@ Label(Frame2, text="BIBLIO INFORMATIONS").pack(padx=10, pady=10)
 Label(Frame3, text="PROTEIN INFORMATIONS").pack(padx=10, pady=10)
 Label(Frame4, text="WORK IN PROGRESS").pack(padx=10, pady=10)
 #Label(Frame5, text="WORK IN PROGRESS").pack(padx=10, pady=10)
-Label(Frame6, text="WORK IN PROGRESS").pack(padx=10, pady=10)
+Label(Frame6, text="TEXT TO SPEAK").grid(column=1, row=0)
 Label(Frame7, text="INVOLVED PATHWAYS").pack(padx=10, pady=10)
 Label(Frame8, text=" GENERAL OPTIONS ").pack(padx=10, pady=10)
 Label(Frame9, text="WORK IN PROGRESS").pack(padx=10, pady=10)
@@ -204,10 +264,10 @@ label_gene_id.pack()
 label_uniprotId = Label(Frame3, text="UniProt ID : NA")
 label_uniprotId.pack()
 ## Open the Uniprot entry
-button_uniprot = Button(Frame3, text='Uniprot Entry', command=lambda x=1:open_uniprot_page())
+button_uniprot = Button(Frame3, text='Uniprot Entry', state='disabled', command=lambda x=1:open_uniprot_page())
 button_uniprot.pack()
 ## Open the mint entry
-button_mint = Button(Frame3, text='Mint Entry', command=lambda x=1:open_mint_page())
+button_mint = Button(Frame3, text='Mint Entry', state='disabled', command=lambda x=1:open_mint_page())
 button_mint.pack()
 
 
@@ -216,6 +276,10 @@ button_mint.pack()
 ## what are we looking for ? currently:
 ##	- Abstract -> pubmed crawling
 ##	- Other -> work in progress
+label_abstract_found = Label(Frame2, text="Abstract Found : NA")
+label_abstract_found.pack()
+
+"""
 fetch_settings = IntVar()
 fetch_settings.set(0)
 Radiobutton(Frame2, text="Abstract", variable=fetch_settings, value=1).pack(anchor=W)
@@ -231,6 +295,8 @@ button_report = Button(Frame2, text='Report', state=DISABLED, command=lambda x=0
 entree.pack()
 button_search.pack()
 button_report.pack()
+"""
+
 
 ## Involved Pathways
 ## Scrollable listbox of pathways
@@ -277,13 +343,29 @@ radiobutton_option_1.grid(column=0, row=2)
 radiobutton_option_2.grid(column=1, row=2)
 radiobutton_option_3.grid(column=2, row=2)
 
-button_search_general = Button(Frame5, text='UNDEF', command=lambda x=2:search(value.get(), fetch_settings.get()))	
-button_report_general = Button(Frame5, text='UNDEF', state=DISABLED, command=lambda x=0:generate_report.write_abstract_report())
-button_random_general = Button(Frame5, text='UNDEF', command=lambda x=2:search(value.get(), fetch_settings.get()))	
+button_search_general = Button(Frame5, text='Search', command=lambda x=2:search(general_search.get(), fetch_settings_general.get()))	
+button_report_general = Button(Frame5, text='Report', state=DISABLED, command=lambda x=0:generate_report.write_abstract_report())
+button_random_general = Button(Frame5, text='Reset', command=reset_search)	
 
 button_search_general.grid(column=0, row=3)
 button_report_general.grid(column=1, row=3)
 button_random_general.grid(column=2, row=3)
+
+
+
+## VOICE FRAME
+## IN PROGRESS
+button_speak = Button(Frame6, text='Speak', command=voice.say_something)
+voice_language = IntVar()
+voice_language.set(1)
+radiobutton_language_1 = Radiobutton(Frame6, text="English", variable=voice_language, value=1)
+radiobutton_language_2 = Radiobutton(Frame6, text="French", variable=voice_language, value=2)
+
+radiobutton_language_1.grid(column=0, row=1)
+radiobutton_language_2.grid(column=2, row=1)
+button_speak.grid(column=1, row=2)
+
+
 
 root.mainloop()
 

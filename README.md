@@ -33,6 +33,8 @@ http://www.nltk.org/book/ch07.html
 	- deal with sif & GDF file
 	- draw interactions
 
+=> Text to speach 
+
 # Plan
 
 1) Retrieve Article (Absrtract) from NCBI
@@ -46,6 +48,8 @@ Biopython
 nltk
 mygene 3.0.0 (python module)
 PyEntrezId 1.5.8
+Pillow
+pyttsx (32 bit version for windows)
 Microsoft Visual C++ 9 under windows
 
 ## Installation:
