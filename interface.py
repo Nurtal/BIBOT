@@ -344,8 +344,8 @@ radiobutton_option_2.grid(column=1, row=2)
 radiobutton_option_3.grid(column=2, row=2)
 
 button_search_general = Button(Frame5, text='Search', command=lambda x=2:search(general_search.get(), fetch_settings_general.get()))	
-button_report_general = Button(Frame5, text='Report', state=DISABLED, command=lambda x=0:generate_report.write_abstract_report())
-button_random_general = Button(Frame5, text='Reset', command=reset_search)	
+button_report_general = Button(Frame5, text='Report', state=DISABLED, command=lambda x=0:generate_report.write_abstract_report_dev())
+button_random_general = Button(Frame5, text='Reset', command=reset_search)
 
 button_search_general.grid(column=0, row=3)
 button_report_general.grid(column=1, row=3)
