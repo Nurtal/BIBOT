@@ -41,5 +41,42 @@ def create_corpus():
 	return newcorpus
 
 
-truc = create_corpus()
-print truc.raw().strip()
+def create_text():
+	## Create nltk Text from text file
+	## write the text file from abstract
+	## fetched by BIBOT.
+	## Return a nltk text object
+
+	## -> Create the input file text
+	## from pubmed abstract file.
+	## -> Get text
+	abstract_file = open("fetched/pubmed_abstract.txt", "r")
+	text = ""
+	for line in abstract_file:
+		line = line.replace("\n", "")
+		if(line[0] != ">"):
+			text += line
+	abstract_file.close()
+
+	# -> write input file
+	text_file = open("fetched/nltk_text.txt", "w")
+	text_file.write(text)
+	text_file.close()
+
+	## -> Create the Text object from the input
+	## text file
+	text_file=open('fetched/nltk_text.txt','rU')
+	raw=text_file.read()
+	tokens = nltk.word_tokenize(raw)
+	text = nltk.Text(tokens)
+
+	## Return the nltk text object
+	return text
+
+
+
+
+### TEST SPACE ###
+stuff = create_text()
+print stuff
+text1.concordance("monstrous")
