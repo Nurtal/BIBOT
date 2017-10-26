@@ -78,5 +78,11 @@ def create_text():
 
 ### TEST SPACE ###
 stuff = create_text()
-print stuff
-text1.concordance("monstrous")
+print len(stuff)
+stuff.concordance("EGFR")
+fdist1 = nltk.FreqDist(stuff)
+print fdist1
+
+print fdist1.most_common(50)
+
+stuff.collocations()
