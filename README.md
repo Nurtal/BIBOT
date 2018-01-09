@@ -55,3 +55,6 @@ Microsoft Visual C++ 9 under windows
 ## Installation:
 pip install biopython
 pip install bioservices
+pip install nltk
+pip install mygene
+pip install pyttsx
