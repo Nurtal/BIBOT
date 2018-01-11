@@ -17,6 +17,7 @@ from Bio import Entrez
 from Bio.Entrez import efetch, read
 from unidecode import unidecode
 import nltk
+import itertools
 
 
 
@@ -233,6 +234,43 @@ def evaluate_article(pmid):
 
 
 
+def get_huge_list_of_artciles(keywords):
+	##
+	## Create all possible comination of at least two elements
+	## from the keywords list. then use these combination
+	## to create request (using only the AND operator for now)
+	## and screen the pubmed database.
+	##
+	## return the list of all articles found
+	##
+
+	## init variables
+	huge_list_of_PMID = []
+
+	## make all combination of at least 2 item in keywords
+	combination_list = []
+	for x in xrange(2, len(keywords)):
+		machin = itertools.combinations(keywords, x)
+		for truc in machin:
+			combination_list.append(list(truc))
+
+	## create request
+	for items_set in combination_list:
+		request = ""
+		for item in items_set:
+			request += item +" AND "
+		request = request[:-5]
+		
+		## screening pubmed
+		results_PMID = get_ListOfArticles(request, 9999999)
+		
+		## increment huge list of pmid
+		for pmid in results_PMID:
+			if(pmid not in huge_list_of_PMID):
+				huge_list_of_PMID.append(pmid)
+
+	return huge_list_of_PMID
+
 
 
 ##------##
@@ -243,9 +281,13 @@ def evaluate_article(pmid):
 
 
 ## request
-machin = get_ListOfArticles("Big Data AND Sjogren", 1)
-evaluate_article(machin[0])
+#machin = get_ListOfArticles("Big Data AND Sjogren", 1)
+#evaluate_article(machin[0])
 
+
+request_term = ["big data", "artificial intelligence", "autoimmunity", "Sjogren"]
+truc = get_huge_list_of_artciles(request_term)
+print len(truc)
 
 """
 ## tokenization exemple
