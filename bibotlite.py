@@ -136,8 +136,12 @@ def evaluate_article(pmid):
 	## Parameters for filters ##
 	##------------------------##
 	oldest_year_authorized = 2008
+	authorized_languages = [u'eng']
 
-	
+	check_date = True
+	check_language = True
+
+
 	##---------------##
 	## The Easy Part ##
 	##---------------##
@@ -163,10 +167,41 @@ def evaluate_article(pmid):
 
 	## Get the author's conflict of interest,
 	## because we can.
-	conflict_of_interest = informations[u'PubmedArticle'][0][u'MedlineCitation'][u'CoiStatement']
+	try:
+		conflict_of_interest = informations[u'PubmedArticle'][0][u'MedlineCitation'][u'CoiStatement']
+	except:
+		conflict_of_interest = "NA"
 
 	## Get title of the article
 	article_title = informations[u'PubmedArticle'][0][u'MedlineCitation'][u'Article'][u'ArticleTitle']
+
+	## Get language of the article
+	article_language = informations[u'PubmedArticle'][0][u'MedlineCitation'][u'Article'][u'Language'][0]
+
+
+	## Basic check on meta data
+	## - check date
+	if(int(year) < int(oldest_year_authorized)):
+		check_date = False
+
+	## - check language
+	if(article_language not in authorized_languages):
+		check_language = False
+
+
+	## Save meta data in a text file
+	## for further use
+	title_line = u'>Title;'+unicode(article_title)+u"\n"
+	date_line = u'>Date;'+unicode(day)+u"/"+unicode(month)+u"/"+unicode(year)+u"\n"
+	journal_line = u">Journal;"+unicode(journal_name)+u"\n"
+	conflict_of_interest_line = u">Conflict;"+unicode(conflict_of_interest)+u"\n"
+	
+	meta_data = open("meta/"+str(pmid)+".csv", "w")
+	meta_data.write(title_line.encode('utf8'))
+	meta_data.write(date_line.encode('utf8'))
+	meta_data.write(journal_line.encode('utf8'))
+	meta_data.write(conflict_of_interest_line.encode('utf8'))
+	meta_data.close()
 
 
 	##----------------##
@@ -177,10 +212,11 @@ def evaluate_article(pmid):
 
 	## fetch the abstract and convert it to
 	## a nltk text object.
-	abstract_file_name = str(pmid)+"_abstract.txt"
+	abstract_file_name = "abstract/"+str(pmid)+"_abstract.txt"
 	abstract = fetch_abstract(pmid)
-	save_abstract(abstract, abstract_file_name)
-	abstract_text = load_text(abstract_file_name)
+	if(abstract):
+		save_abstract(abstract, abstract_file_name)
+		abstract_text = load_text(abstract_file_name)
 
 
 
@@ -193,7 +229,8 @@ def evaluate_article(pmid):
 
 
 ## request
-machin = get_ListOfArticles("Big Data AND Sjogren", 1)
+machin = get_ListOfArticles("Big Data AND Sjogren", 15)
+machin = get_ListOfArticles("Shen", 150)
 
 
 for pmid in machin:
