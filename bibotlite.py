@@ -208,7 +208,6 @@ def evaluate_article(pmid):
 	## The Smart Part ## 
 	##----------------##
 	## run further analysis on the abstract using nltk
-	## => TODO
 
 	## fetch the abstract and convert it to
 	## a nltk text object.
@@ -217,6 +216,21 @@ def evaluate_article(pmid):
 	if(abstract):
 		save_abstract(abstract, abstract_file_name)
 		abstract_text = load_text(abstract_file_name)
+		
+		## Play with tokenization and chunking
+		## Get all the commun names in the abstract
+		names_found_in_abstract = []
+		tokens = nltk.word_tokenize(abstract.encode('utf8'))
+		tagged = nltk.pos_tag(tokens)
+		entities = nltk.chunk.ne_chunk(tagged)
+		for item in entities:
+			try:
+				if(item[1] in ["NN", "NNS", "NNP"]):
+					if(item[0] not in names_found_in_abstract):
+						names_found_in_abstract.append(item[0])
+			except:
+				choucroute = True
+
 
 
 
@@ -229,15 +243,26 @@ def evaluate_article(pmid):
 
 
 ## request
-machin = get_ListOfArticles("Big Data AND Sjogren", 15)
-machin = get_ListOfArticles("Shen", 150)
+machin = get_ListOfArticles("Big Data AND Sjogren", 1)
+evaluate_article(machin[0])
 
 
+"""
+## tokenization exemple
+from nltk.corpus import treebank
+sentence = "the dog is green and the rabbit is mean"
+tokens = nltk.word_tokenize(sentence)
+tagged = nltk.pos_tag(tokens)
+entities = nltk.chunk.ne_chunk(tagged)
+print entities
+entities.draw()
+"""
+
+
+
+"""
 for pmid in machin:
-
 	evaluate_article(pmid)
-
-	"""
 
 	## get abstract
 	abstract_file_name = str(truc)+"_abstract.txt"
