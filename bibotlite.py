@@ -180,14 +180,7 @@ def evaluate_article(pmid):
 	article_language = informations[u'PubmedArticle'][0][u'MedlineCitation'][u'Article'][u'Language'][0]
 
 
-	## Basic check on meta data
-	## - check date
-	if(int(year) < int(oldest_year_authorized)):
-		check_date = False
-
-	## - check language
-	if(article_language not in authorized_languages):
-		check_language = False
+	
 
 
 	## Save meta data in a text file
@@ -230,7 +223,60 @@ def evaluate_article(pmid):
 					if(item[0] not in names_found_in_abstract):
 						names_found_in_abstract.append(item[0])
 			except:
+				## Somethig went wrong
 				choucroute = True
+
+				
+		## -> Biology keywords check
+		## -> Artificial intelligence keywords check
+		IA_keywords = ["algorithm", "machine" "learning", "neural", "network", "statistic", "deep"]
+		Clinical_keywords = ["Sjogren" "lupus", "autoimmunity"]
+		validation_check_keywords_1 = False
+		validation_check_keywords_2 = False
+		for item in names_found_in_abstract:
+			if(item in IA_keywords):
+				validation_check_keywords_1 = True
+			if(item in Clinical_keywords):
+				validation_check_keywords_2 = True
+
+		
+
+	##--------------##
+	## PASS OR FAIL ##
+	##--------------##
+	## General check phase
+	easy_check_passed = False
+	smart_check_passed = False
+
+	## Basic check on meta data
+	## - check date
+	if(int(year) < int(oldest_year_authorized)):
+		check_date = False
+
+	## - check language
+	if(article_language not in authorized_languages):
+		check_language = False
+
+	## Easy Filter
+	if(check_date and check_language):
+		easy_check_passed = True
+
+	## Complex filter
+	
+
+
+
+	##-------------##
+	## SAVING DATA ##
+	##-------------##
+	## Write and delete files
+
+
+	##------------------##
+	## RETURN SOMETHING ##
+	##------------------##
+	## return True if the article pass the 
+	## evaluation, else False.
 
 
 
@@ -285,7 +331,7 @@ def get_huge_list_of_artciles(keywords):
 #evaluate_article(machin[0])
 
 
-request_term = ["big data", "artificial intelligence", "autoimmunity", "Sjogren"]
+request_term = ["big data", "artificial intelligence", "autoimmunity", "Sjogren", "RA", "SLE", "lupus"]
 truc = get_huge_list_of_artciles(request_term)
 print len(truc)
 
