@@ -18,7 +18,7 @@ from Bio.Entrez import efetch, read
 from unidecode import unidecode
 import nltk
 import itertools
-
+import os
 
 
 
@@ -139,64 +139,53 @@ def evaluate_article(pmid):
 	oldest_year_authorized = 2008
 	authorized_languages = [u'eng']
 
+	valid_article = False
 	check_date = True
 	check_language = True
+	validation_check_keywords_1 = False
+	validation_check_keywords_2 = False
+
 
 
 	##---------------##
 	## The Easy Part ##
 	##---------------##
 	## get meta data on the articles
-	handle = efetch(db='pubmed', id=pmid, retmode='xml', )
-	informations = read(handle)
-	stuff = informations[u'PubmedArticle'][0] 
-	
-	## get date from the history attribute, select
-	## the date of acceptation.
-	date = stuff[u'PubmedData']["History"][1]
-	month = date[u'Month']
-	day = date[u'Day']
-	year = date[u'Year']
-
-	## get the name of the review
-	journal_name = informations[u'PubmedArticle'][0][u'MedlineCitation'][u'MedlineJournalInfo'][u'MedlineTA']
-	
-	## get the keywords for the articles
-	## the format is a bit strange, may have to be carreful
-	## with this data (mix of strings and unicode elements)
-	keywords_list = informations[u'PubmedArticle'][0][u'MedlineCitation'][u'KeywordList']
-
-	## Get the author's conflict of interest,
-	## because we can.
 	try:
-		conflict_of_interest = informations[u'PubmedArticle'][0][u'MedlineCitation'][u'CoiStatement']
+		handle = efetch(db='pubmed', id=pmid, retmode='xml', )
+		informations = read(handle)
+		stuff = informations[u'PubmedArticle'][0] 
+		
+		## get date from the history attribute, select
+		## the date of acceptation.
+		date = stuff[u'PubmedData']["History"][1]
+		month = date[u'Month']
+		day = date[u'Day']
+		year = date[u'Year']
+
+		## get the name of the review
+		journal_name = informations[u'PubmedArticle'][0][u'MedlineCitation'][u'MedlineJournalInfo'][u'MedlineTA']
+		
+		## get the keywords for the articles
+		## the format is a bit strange, may have to be carreful
+		## with this data (mix of strings and unicode elements)
+		keywords_list = informations[u'PubmedArticle'][0][u'MedlineCitation'][u'KeywordList']
+
+		## Get the author's conflict of interest,
+		## because we can.
+		try:
+			conflict_of_interest = informations[u'PubmedArticle'][0][u'MedlineCitation'][u'CoiStatement']
+		except:
+			conflict_of_interest = "NA"
+
+		## Get title of the article
+		article_title = informations[u'PubmedArticle'][0][u'MedlineCitation'][u'Article'][u'ArticleTitle']
+
+		## Get language of the article
+		article_language = informations[u'PubmedArticle'][0][u'MedlineCitation'][u'Article'][u'Language'][0]
+
 	except:
-		conflict_of_interest = "NA"
-
-	## Get title of the article
-	article_title = informations[u'PubmedArticle'][0][u'MedlineCitation'][u'Article'][u'ArticleTitle']
-
-	## Get language of the article
-	article_language = informations[u'PubmedArticle'][0][u'MedlineCitation'][u'Article'][u'Language'][0]
-
-
-	
-
-
-	## Save meta data in a text file
-	## for further use
-	title_line = u'>Title;'+unicode(article_title)+u"\n"
-	date_line = u'>Date;'+unicode(day)+u"/"+unicode(month)+u"/"+unicode(year)+u"\n"
-	journal_line = u">Journal;"+unicode(journal_name)+u"\n"
-	conflict_of_interest_line = u">Conflict;"+unicode(conflict_of_interest)+u"\n"
-	
-	meta_data = open("meta/"+str(pmid)+".csv", "w")
-	meta_data.write(title_line.encode('utf8'))
-	meta_data.write(date_line.encode('utf8'))
-	meta_data.write(journal_line.encode('utf8'))
-	meta_data.write(conflict_of_interest_line.encode('utf8'))
-	meta_data.close()
-
+		return (False,False,False)
 
 	##----------------##
 	## The Smart Part ## 
@@ -214,9 +203,14 @@ def evaluate_article(pmid):
 		## Play with tokenization and chunking
 		## Get all the commun names in the abstract
 		names_found_in_abstract = []
-		tokens = nltk.word_tokenize(abstract.encode('utf8'))
-		tagged = nltk.pos_tag(tokens)
-		entities = nltk.chunk.ne_chunk(tagged)
+		try:
+			tokens = nltk.word_tokenize(abstract.encode('utf8'))
+			tagged = nltk.pos_tag(tokens)
+			entities = nltk.chunk.ne_chunk(tagged)
+		except:
+			print "[WARNINGS] => can't perform nlp operation"
+			entities = []
+
 		for item in entities:
 			try:
 				if(item[1] in ["NN", "NNS", "NNP"]):
@@ -225,22 +219,17 @@ def evaluate_article(pmid):
 			except:
 				## Somethig went wrong
 				choucroute = True
-
 				
 		## -> Biology keywords check
 		## -> Artificial intelligence keywords check
 		IA_keywords = ["algorithm", "machine" "learning", "neural", "network", "statistic", "deep"]
 		Clinical_keywords = ["Sjogren" "lupus", "autoimmunity"]
-		validation_check_keywords_1 = False
-		validation_check_keywords_2 = False
 		for item in names_found_in_abstract:
 			if(item in IA_keywords):
 				validation_check_keywords_1 = True
 			if(item in Clinical_keywords):
 				validation_check_keywords_2 = True
-
 		
-
 	##--------------##
 	## PASS OR FAIL ##
 	##--------------##
@@ -262,21 +251,46 @@ def evaluate_article(pmid):
 		easy_check_passed = True
 
 	## Complex filter
-	
+	if(validation_check_keywords_1 and validation_check_keywords_2):
+		smart_check_passed = True
 
-
+	## Global check
+	if(easy_check_passed and smart_check_passed):
+		valid_article = True
 
 	##-------------##
 	## SAVING DATA ##
 	##-------------##
 	## Write and delete files
+	if(valid_article):
 
+		## Save meta data in a text file
+		## for further use
+		title_line = u'>Title;'+unicode(article_title)+u"\n"
+		date_line = u'>Date;'+unicode(day)+u"/"+unicode(month)+u"/"+unicode(year)+u"\n"
+		journal_line = u">Journal;"+unicode(journal_name)+u"\n"
+		conflict_of_interest_line = u">Conflict;"+unicode(conflict_of_interest)+u"\n"
+		meta_data = open("meta/"+str(pmid)+".csv", "w")
+		meta_data.write(title_line.encode('utf8'))
+		meta_data.write(date_line.encode('utf8'))
+		meta_data.write(journal_line.encode('utf8'))
+		meta_data.write(conflict_of_interest_line.encode('utf8'))
+		meta_data.close()
+
+	else:
+		## Delete the abstract
+		try:
+			if(abstract):
+				os.remove(abstract_file_name)
+		except:
+			print "[WARNING] => can't delete "+str(abstract_file_name)
 
 	##------------------##
 	## RETURN SOMETHING ##
 	##------------------##
 	## return True if the article pass the 
 	## evaluation, else False.
+	return (valid_article, easy_check_passed, smart_check_passed)
 
 
 
@@ -333,8 +347,31 @@ def get_huge_list_of_artciles(keywords):
 
 request_term = ["big data", "artificial intelligence", "autoimmunity", "Sjogren", "RA", "SLE", "lupus"]
 truc = get_huge_list_of_artciles(request_term)
-print len(truc)
+total_number = len(truc)
+fetched = 0
+first_fiter_passed = 0
+last_filter_passed = 0
+cmpt = 0
+for article in truc:
+	valid = evaluate_article(article)
+	filter_1_status = "FAILED"
+	filter_2_status = "FAILED"
+	if(valid[0]):
+		fetched += 1
+	if(valid[1]):
+		first_fiter_passed += 1
+		filter_1_status = "PASSED"
+	if(valid[2]):
+		last_filter_passed += 1
+		filter_2_status = "PASSED"
+	cmpt += 1
 
+	#print str(cmpt) +" || " +str(fetched) + " || " +str(total_number)
+	print "|| "+str(cmpt) +" [PROCESSED] || "+ str(fetched) + " [SELECTED] || FIRST FILTERS ["+filter_1_status+ "] || LAST FILTER ["+filter_2_status+ "] || "+str(float((float(cmpt)/float(total_number))*100)) + "% [COMPLETE]"
+
+
+print "FIRST FILTER PASS => "+str(first_fiter_passed)
+print "LAST FILTER PASS => "+str(last_filter_passed)
 """
 ## tokenization exemple
 from nltk.corpus import treebank
