@@ -58,3 +58,7 @@ pip install bioservices
 pip install nltk
 pip install mygene
 pip install pyttsx
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('maxent_ne_chunker')
+nltk.download('words')
