@@ -2,12 +2,15 @@
 Grand Bazar
 """
 
+import matplotlib
+matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
 from Bio import Entrez
 from Bio.Entrez import efetch, read
 import nltk
 import re
 import pprint
-
+import glob
 import os
 
 from bioservices import *
@@ -296,6 +299,145 @@ def convert_SifFileToGDFfile(fileName):
 	os.remove("edges_buildGDF.tmp")
 
 
+def save_abstract(abstract, save_file):
+	##
+	## -> Save the abstract in a text file
+	## convert the abstract to unicode.
+	##
+
+	## preprocess abstract
+	#abstract_preprocess = unicode(abstract)
+	abstract_preprocess = abstract.encode('utf8')
+
+	## save abstract in file
+	output = open(save_file, "w")
+	output.write(abstract_preprocess)
+	output.close()
+
+def get_cohorte_size(abstract_file):
+	##
+	## IN PROGRESS
+	##
+	## -> Try to retrieve the number of patients/case
+	## in the dataset presented in the abstract
+	## 
+	## TODO : add more regex for size detection
+	## TODO : add to bibotlite.py
+	##
+
+	## read abstract
+	abstract = open(abstract_file, "r")
+
+	cohorte_size = -1
+	for line in abstract:
+
+		## Try to catch a number before the apparition of the 
+		## term in catch terms list. keep the biggest number
+		## found in the abstract.
+		catch_terms = ["patients", "cases", "observations"]
+		for item in catch_terms:
+			m = re.findall(r"([0-9]+[\.|,]?[0-9]+) "+str(item), line)		
+			if(m is not None):
+				for match in m:
+					match = match.replace(",", "")
+					try:
+						fetched_cohorte_size = int(match)
+						if(fetched_cohorte_size > cohorte_size):
+							cohorte_size = fetched_cohorte_size
+					except:
+						## do nothing
+						tardis = 1
+
+		## Try to catch a number after the apparition of the 
+		## term "n = ". keep the biggest number found in the
+		## abstract.
+		m = re.findall(r"n = ([0-9]+[\.|,]?[0-9]+)", line)		
+		if(m is not None):
+			for match in m:
+				match = match.replace(",", "")
+				try:
+					fetched_cohorte_size = int(match)
+					if(fetched_cohorte_size > cohorte_size):
+						cohorte_size = fetched_cohorte_size
+				except:
+					## do nothing
+					tardis = 1
+
+	## close abstract
+	abstract.close()
+
+	## check if the cohorte_size variable
+	## is still set to -1, set it to NA if
+	## True
+	if(cohorte_size == -1):
+		cohorte_size = "NA"
+
+	## return the detected size of the cohorte
+	return cohorte_size
+
+
+
+
+
+def get_date_from_meta_save(meta_file):
+	##
+	## Get the date of an article using the
+	## meta data file created on local device,
+	## no connection needed to NCBI server
+	##
+	## -> return the year of publication
+	##
+	## TODO : add to bibotlite.py
+	##
+
+	## Retrieve the year of publication
+	## from the meta data file.
+	year = "NA"
+	meta_data = open(meta_file, "r")
+	for line in meta_data:
+		
+		line = line.replace("\n", "")
+		if(line[0] == ">"):
+
+			line_in_array = line.split(";")
+			if(line_in_array[0] == ">Date"):
+				date_in_array = line_in_array[1].split("/")
+				year = date_in_array[2]
+
+	meta_data.close()
+
+	## return only the year of publication
+	return year
+
+
+
+
+def plot_pulbications_years(meta_data_folder):
+	##
+	## Retrieve the year of publications of all
+	## articles from the meta_data_folder and
+	## plot the histogramm of publications over
+	## the years
+	##
+	## TODO : add to bibotlite.py
+	##
+
+	## create the structure
+	year_to_count = {}
+	for meta_file in glob.glob(meta_data_folder+"/*.csv"):
+		year = get_date_from_meta_save(meta_file)
+		if(year not in year_to_count.keys()):
+			year_to_count[year] = 1
+		else:
+			year_to_count[year] += 1
+
+	## plot graphe
+	plt.bar(year_to_count.keys(), year_to_count.values(), 1, color='b')
+	plt.show()
+
+
+
+
 
 
 
@@ -307,6 +449,38 @@ print "------[TEST SPACE]------\n"
 machin = get_ListOfDirectInteraction("P43403", "P06239")
 print "-------------------------------------------------------"
 print machin
+"""
+
+
+"""
+m = re.search(r"(?P<number>\w+) patients", "There are 257 patients in this study.")
+if(m is not None):
+	print m.group('number')
+"""
+
+"""
+pmid_list = []
+pmid_file = open("/home/perceval/Workspace/publications/immuno_review/articles/manually_retrieved/MANIFEST.txt", "r")
+for line in pmid_file:
+	line = line.replace("\n", "")
+	pmid_list.append(line)
+pmid_file.close()
+for pmid in pmid_list:
+	try:
+		abstract = fetch_abstract(pmid)
+		save_abstract(abstract, "abstract_1/abstract/"+str(pmid)+".txt")
+	except:
+		print "FAILED"
+"""
+
+"""
+save_path = "SAVE/run_1/abstract/*.txt"
+old_path = "abstract_1/abstract/*.txt"
+cmpt = 1
+for abstract in glob.glob(old_path):
+	size = get_cohorte_size(abstract)
+	print size
+	cmpt += 1
 """
 
 #k = KEGG(verbose=False)
