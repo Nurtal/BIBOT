@@ -1,7 +1,6 @@
 """
 Grand Bazar
 """
-
 import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
@@ -438,6 +437,64 @@ def plot_pulbications_years(meta_data_folder):
 
 
 
+def plot_word_evolution(item, run_folder):
+	##
+	## -> Plot word frequency evolution over
+	## the last decade
+	##
+
+	## get year to pmid
+	year_to_pmid = {}
+	for meta_file in glob.glob(run_folder+"/meta/*.csv"):
+		pmid = meta_file.split("/")
+		pmid = pmid[-1]
+		pmid = pmid.split(".")
+		pmid = pmid[0]
+		year = get_date_from_meta_save(meta_file)
+		if(year not in year_to_pmid.keys()):
+			year_to_pmid[year] = []
+			year_to_pmid[year].append(pmid)
+		else:
+			year_to_pmid[year].append(pmid)
+
+	## get apparition count in articles
+	year_to_count = {}
+	for year in year_to_pmid.keys():
+		list_of_pmis_to_check = year_to_pmid[year]
+		year_to_count[year] = 0
+		for pmid in list_of_pmis_to_check:
+			abstract_file = run_folder+"/"+"abstract/"+str(pmid)+"_abstract.txt"
+			try:
+				abstract_data = open(abstract_file, "r")
+				for line in abstract_data:	
+					m = re.findall(r"("+str(item)+")", line)		
+					if(m is not None):
+						if(len(m) > 0):
+							year_to_count[year] += 1
+				abstract_data.close()
+			except:
+				## do nothing
+				tardis = 1
+
+	## get apparition frequencies
+	year_to_frequency = {}
+	for year in year_to_pmid.keys():
+		frequency = float(year_to_count[year])/float(len(year_to_pmid[year]))
+		year_to_frequency[year] = frequency
+
+	## plot
+	y_vector = []
+	x_vector = sorted(year_to_frequency.keys()) 
+	for year in x_vector:
+		y_vector.append(year_to_frequency[year])
+	plt.plot(x_vector, y_vector)
+	plt.show()
+	
+
+
+
+
+
 
 
 
@@ -451,6 +508,8 @@ print "-------------------------------------------------------"
 print machin
 """
 
+#plot_pulbications_years("SAVE/run_1/meta")
+plot_word_evolution("patients", "SAVE/run_1")
 
 """
 m = re.search(r"(?P<number>\w+) patients", "There are 257 patients in this study.")
