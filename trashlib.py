@@ -333,7 +333,7 @@ def get_cohorte_size(abstract_file):
 		## Try to catch a number before the apparition of the 
 		## term in catch terms list. keep the biggest number
 		## found in the abstract.
-		catch_terms = ["patients", "cases", "observations"]
+		catch_terms = ["patients", "cases", "observations", "subjects"]
 		for item in catch_terms:
 			m = re.findall(r"([0-9]+[\.|,]?[0-9]+) "+str(item), line)		
 			if(m is not None):
@@ -361,6 +361,35 @@ def get_cohorte_size(abstract_file):
 				except:
 					## do nothing
 					tardis = 1
+
+		## Try to catch a number in a classic expression
+		m = re.findall(r"[I,i]n total, ([0-9]+[\.|,]?[0-9]+) subjects", line)
+		if(m is not None):
+			for match in m:
+				match = match.replace(",", "")
+				try:
+					fetched_cohorte_size = int(match)
+					if(fetched_cohorte_size > cohorte_size):
+						cohorte_size = fetched_cohorte_size
+				except:
+					## do nothing
+					tardis = 1
+
+		"""
+		## Try to catch a number in a classic expression
+		m = re.findall(r"([0-9]+[\.|,]?[0-9]+)", line)
+		if(m is not None):
+			for match in m:
+				match = match.replace(",", "")
+				try:
+					fetched_cohorte_size = int(match)
+					if(fetched_cohorte_size > cohorte_size):
+						cohorte_size = fetched_cohorte_size
+				except:
+					## do nothing
+					tardis = 1
+		"""
+
 
 	## close abstract
 	abstract.close()
@@ -425,10 +454,13 @@ def plot_pulbications_years(meta_data_folder):
 	year_to_count = {}
 	for meta_file in glob.glob(meta_data_folder+"/*.csv"):
 		year = get_date_from_meta_save(meta_file)
-		if(year not in year_to_count.keys()):
-			year_to_count[year] = 1
-		else:
-			year_to_count[year] += 1
+		
+		if(int(year) < 2018):
+
+			if(year not in year_to_count.keys()):
+				year_to_count[year] = 1
+			else:
+				year_to_count[year] += 1
 
 	## plot graphe
 	plt.bar(year_to_count.keys(), year_to_count.values(), 1, color='b')
@@ -487,7 +519,8 @@ def plot_word_evolution(item_list, run_folder):
 
 		## save the figure
 		y_vector = []
-		x_vector = sorted(year_to_frequency.keys()) 
+		x_vector = sorted(year_to_frequency.keys())
+
 		for year in x_vector:
 			y_vector.append(year_to_frequency[year])
 		fig = plt.figure()
@@ -496,6 +529,77 @@ def plot_word_evolution(item_list, run_folder):
 		#plt.show()
 	
 
+
+
+
+def describe_articles_type(run_folder):
+	##
+	## 
+	## Count the number of articles talking about
+	## several diseases, return a dictionnary.
+	## currently work on:
+	##		- SjS
+	##		- SLE
+	##		- RA
+	##
+
+	abstract_to_disease = {}
+	abstract_to_disease["SjS"] = 0
+	abstract_to_disease["SLE"] = 0
+	abstract_to_disease["RA"] = 0 
+	abstract_to_disease["Other"] = 0
+	abstract_list = glob.glob(str(run_folder)+"/abstract/*.txt")
+	for abstract_file in abstract_list:
+
+		talking_about_SjS = False
+		talking_about_RA = False
+		talking_about_SLE = False
+
+		abstract = open(abstract_file, "r")
+
+		for line in abstract:
+
+			## SjS
+			m = re.findall(r"([S,s]j.gren)", line)
+			if(len(m)>0):
+				talking_about_SjS = True
+			m = re.findall(r"(SjS)", line)
+			if(len(m)>0):
+				talking_about_SjS = True
+
+			## SLE
+			m = re.findall(r"([L,l]upus)", line)
+			if(len(m)>0):
+				talking_about_SLE = True
+			m = re.findall(r"(SLE)", line)
+			if(len(m)>0):
+				talking_about_SLE = True
+
+			## RA
+			m = re.findall(r"([A,a])rthrisis", line)
+			if(len(m)>0):
+				talking_about_RA = True
+			m = re.findall(r"(RA)", line)
+			if(len(m)>0):
+				talking_about_RA = True
+
+		
+		if(talking_about_SjS):
+			abstract_to_disease["SjS"] += 1
+		if(talking_about_SLE):
+			abstract_to_disease["SLE"] += 1
+		if(talking_about_RA):
+			abstract_to_disease["RA"] += 1
+		else:
+			abstract_to_disease["Other"] += 1
+
+			
+		abstract.close()
+
+	
+
+	print abstract_to_disease
+		
 
 
 
@@ -513,8 +617,15 @@ print "-------------------------------------------------------"
 print machin
 """
 
-#plot_pulbications_years("SAVE/run_1/meta")
-plot_word_evolution(["patients", "choucroute"], "SAVE/run_1")
+#plot_pulbications_years("SAVE/run_2/meta")
+
+
+describe_articles_type("SAVE/run_2")
+
+#item_list = ["neural network", "machine learning", "machine", "classification", "modelisation", "Sjogren", "random forest", "kmean",
+#"statistic", "bioinformatic", "big data", "artificial intelligence", "diagnostic", "patients", "learning", "prediction", "cluster", "clusterring",
+#"computer", "lupus", "RA", "IA", "sjogren"]
+#plot_word_evolution(item_list, "SAVE/run_2")
 
 """
 m = re.search(r"(?P<number>\w+) patients", "There are 257 patients in this study.")
@@ -540,12 +651,15 @@ for pmid in pmid_list:
 """
 save_path = "SAVE/run_1/abstract/*.txt"
 old_path = "abstract_1/abstract/*.txt"
+run_2 = "abstract_2/*.txt"
+current_run = "abstract/*.txt"
 cmpt = 1
-for abstract in glob.glob(old_path):
+for abstract in glob.glob(current_run):
 	size = get_cohorte_size(abstract)
 	print size
 	cmpt += 1
 """
+
 
 #k = KEGG(verbose=False)
 #truc = k.find("hsa", "zap70")

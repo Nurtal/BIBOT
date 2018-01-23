@@ -19,7 +19,10 @@ from unidecode import unidecode
 import nltk
 import itertools
 import os
-
+import time
+import shutil
+import datetime
+import glob
 
 
 ##------------##
@@ -222,8 +225,8 @@ def evaluate_article(pmid):
 				
 		## -> Biology keywords check
 		## -> Artificial intelligence keywords check
-		IA_keywords = ["algorithm", "machine" "learning", "neural", "network", "statistic", "deep"]
-		Clinical_keywords = ["Sjogren" "lupus", "autoimmunity"]
+		IA_keywords = ["algorithm", "machine" "learning", "neural", "network", "statistic", "deep", "classification", "model"]
+		Clinical_keywords = ["Sjogren" ,"sjogren", "lupus", "autoimmunity", "rhumatoid", "arthrisis", "RA", "SjS", "SLE"]
 		for item in names_found_in_abstract:
 			if(item in IA_keywords):
 				validation_check_keywords_1 = True
@@ -333,20 +336,117 @@ def get_huge_list_of_artciles(keywords):
 
 
 
+def run(request_term):
+	##
+	## IN PROGRESS
+	##
+	## main function, run the bibot programm
+	##
+
+	## Clean absract and meta folder
+	for abstract_file in glob.glob("abstract/*.txt"):
+		os.remove(abstract_file)
+	for meta_data in glob.glob("meta/*.csv"):
+		os.remove(meta_data)
+
+	## variables and file initialisation
+	log_file = open("bibotlite.log", "w")
+	
+	## Save request term in log file
+	request_line = ""
+	for item in request_term:
+		request_line += str(item)+";"
+	request_line = request_line[:-1]
+	log_file.write(request_line+"\n")
+
+	## First interrogation of medline, get a
+	## huge list of articles possibly relevant and
+	## write the numbers of article in lig file
+	big_list = get_huge_list_of_artciles(request_term)
+	Total_number_of_articles = len(big_list)
+	log_file.write("Total_number_of_articles;"+str(Total_number_of_articles)+"\n")
+
+	## Test each articles retrieved from their pmid
+	fetched = 0
+	first_fiter_passed = 0
+	last_filter_passed = 0
+	cmpt = 0
+
+	for article in big_list:
+
+		## try to evaluate the article
+		## require a connection to the
+		## NCBI Server, if succed go on, 
+		## else wait 5 seconds and try again
+		article_is_evaluated = False
+		while(not article_is_evaluated):
+			try:
+				valid = evaluate_article(article)
+				article_is_evaluated = True
+			except:
+				print "|| CAN'T REACH NCBI, WAIT FOR 5 SECONDS ||"
+				now = datetime.datetime.now()
+				time_tag = str(now.hour)+"h:"+str(now.minute)+"m:"+str(now.day)+":"+str(now.month)
+				log_file.write("["+str(time_tag)+"];can't reach NCBI, wait for 5 seconds\n")
+				time.sleep(5)
+
+
+		filter_1_status = "FAILED"
+		filter_2_status = "FAILED"
+		if(valid[0]):
+			fetched += 1
+		if(valid[1]):
+			first_fiter_passed += 1
+			filter_1_status = "PASSED"
+		if(valid[2]):
+			last_filter_passed += 1
+			filter_2_status = "PASSED"
+		cmpt += 1
+
+		## Display progress on screen
+		## and status for each pmid in log file
+		print "|| "+str(cmpt) +" [PROCESSED] || "+ str(fetched) + " [SELECTED] || FIRST FILTERS ["+filter_1_status+ "] || LAST FILTER ["+filter_2_status+ "] || "+str(float((float(cmpt)/float(Total_number_of_articles))*100)) + "% [COMPLETE]"
+		log_file.write(">"+str(article)+";First_Filter="+str(filter_1_status)+";Last_filter="+str(filter_2_status)+"\n")
+
+	## close log file
+	log_file.close()
+
+	## Save the results files
+	## and folders
+	now = datetime.datetime.now()
+	time_tag = str(now.hour)+"h:"+str(now.minute)+"m:"+str(now.day)+":"+str(now.month)
+	abstract_destination  = "SAVE/run_"+str(time_tag)+"/abstract"
+	meta_destination = "SAVE/run_"+str(time_tag)+"/meta"
+	log_destination = "SAVE/run_"+str(time_tag)+"/bibotlite.log"
+	shutil.copytree("abstract", abstract_destination)
+	shutil.copytree("meta", meta_destination)
+	shutil.copy("bibotlite.log", log_destination)
+
+
+
+
+
+
+
 ##------##
 ## MAIN ##
 ##------##
 
 
+request_term_list =[["autoimmunity", "SjS", "RA", "SLE", "machine learning"],["big data", "artificial intelligence", "autoimmunity", "Sjogren", "RA", "SLE", "lupus", "machine learning", "modelisation"],["big data", "artificial intelligence", "autoimmunity", "Sjogren", "SjS", "RA", "SLE", "lupus", "machine learning", "modelisation", "random forest", "classification"]] 
+for request_term in request_term_list:
+	run(request_term)
 
 
-## request
-#machin = get_ListOfArticles("Big Data AND Sjogren", 1)
-#evaluate_article(machin[0])
 
 
-request_term = ["big data", "artificial intelligence", "autoimmunity", "Sjogren", "RA", "SLE", "lupus"]
-truc = get_huge_list_of_artciles(request_term)
+#request_term = ["big data", "artificial intelligence", "autoimmunity", "Sjogren", "RA", "SLE", "lupus", "machine learning", "modelisation"]
+#truc = get_huge_list_of_artciles(request_term)
+#print len(truc)
+
+
+"""
+truc = truc[19809:]
 total_number = len(truc)
 fetched = 0
 first_fiter_passed = 0
@@ -372,6 +472,8 @@ for article in truc:
 
 print "FIRST FILTER PASS => "+str(first_fiter_passed)
 print "LAST FILTER PASS => "+str(last_filter_passed)
+"""
+
 """
 ## tokenization exemple
 from nltk.corpus import treebank
