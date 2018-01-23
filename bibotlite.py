@@ -325,8 +325,13 @@ def get_huge_list_of_artciles(keywords):
 		request = request[:-5]
 		
 		## screening pubmed
-		results_PMID = get_ListOfArticles(request, 9999999)
-		
+		screened = False
+		while(not screened):
+			try:
+				results_PMID = get_ListOfArticles(request, 9999999)
+				screened = True
+			except:
+				time.sleep(1)
 		## increment huge list of pmid
 		for pmid in results_PMID:
 			if(pmid not in huge_list_of_PMID):
@@ -434,7 +439,8 @@ def run(request_term):
 
 
 request_term_list =[["autoimmunity", "SjS", "RA", "SLE", "machine learning"],["big data", "artificial intelligence", "autoimmunity", "Sjogren", "RA", "SLE", "lupus", "machine learning", "modelisation"],["big data", "artificial intelligence", "autoimmunity", "Sjogren", "SjS", "RA", "SLE", "lupus", "machine learning", "modelisation", "random forest", "classification"]] 
-for request_term in request_term_list:
+
+for request_term in request_term_list[::-1]:
 	run(request_term)
 
 
