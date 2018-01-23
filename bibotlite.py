@@ -386,6 +386,7 @@ def run(request_term):
 		article_is_evaluated = False
 		while(not article_is_evaluated):
 			try:
+				print "|| TRY TO PROCESS ARTICLE "+str(article)+ " ||"
 				valid = evaluate_article(article)
 				article_is_evaluated = True
 			except:
@@ -440,7 +441,7 @@ def run(request_term):
 
 request_term_list =[["autoimmunity", "SjS", "RA", "SLE", "machine learning"],["big data", "artificial intelligence", "autoimmunity", "Sjogren", "RA", "SLE", "lupus", "machine learning", "modelisation"],["big data", "artificial intelligence", "autoimmunity", "Sjogren", "SjS", "RA", "SLE", "lupus", "machine learning", "modelisation", "random forest", "classification"]] 
 
-for request_term in request_term_list[::-1]:
+for request_term in request_term_list:
 	run(request_term)
 
 
