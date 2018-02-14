@@ -44,21 +44,23 @@ http://www.nltk.org/book/ch07.html
 3) Reason on parsed abstract
 
 ## Requirements:
-Biopython
-nltk
-mygene 3.0.0 (python module)
-PyEntrezId 1.5.8
-Pillow
-pyttsx (32 bit version for windows)
-Microsoft Visual C++ 9 under windows
+
+* Biopython
+* nltk
+* mygene 3.0.0 (python module)
+* PyEntrezId 1.5.8
+* Pillow
+* pyttsx (32 bit version for windows)
+* Microsoft Visual C++ 9 under windows
 
 ## Installation:
-pip install biopython
-pip install bioservices
-pip install nltk
-pip install mygene
-pip install pyttsx
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-nltk.download('maxent_ne_chunker')
+
+* pip install biopython
+* pip install bioservices
+* pip install nltk
+* pip install mygene
+* pip install pyttsx
+* nltk.download('punkt')
+* nltk.download('averaged_perceptron_tagger')
+* nltk.download('maxent_ne_chunker')
 nltk.download('words')
