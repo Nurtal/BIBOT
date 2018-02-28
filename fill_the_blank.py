@@ -1,410 +1,86 @@
-"""
-Grand Bazar
-"""
 import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
+import os
+import shutil
+import datetime
+import sys
+import glob
+import re
+import nltk
+import operator
 from Bio import Entrez
 from Bio.Entrez import efetch, read
-import nltk
-import re
-import pprint
-import glob
-import os
-import operator
 
-from bioservices import *
 
-import mygene
+##-----------##
+## FUNCTIONS ##########################################################################################
+##-----------##
 
 
-Entrez.email = 'murlock.raspberypi@gmail.com'
-
-
-def fetch_abstract(pmid):
-	"""
-	Retrun abstract of a given
-	article using pmid
-
-	=> Return None when pmid can't be return
-	(can happen when article is in chinese)
-	"""
-	handle = efetch(db='pubmed', id=pmid, retmode='xml', )
-	xml_data = read(handle)
-	xml_data = xml_data['PubmedArticle'][0]
-	
-	try:
-		article = xml_data['MedlineCitation']['Article']
-		abstract = article['Abstract']['AbstractText'][0]
-		return abstract
-	except IndexError:
-		return None
-	except KeyError:
-		return None
-
-
-def fetch_article(pmid):
-	"""
-	Test function
-	"""
-	handle = efetch(db='pubmed', id=pmid, retmode='xml', )
-	xml_data = read(handle)[0]
-
-	try:
-		article = xml_data['MedlineCitation']['Article']
-		abstract = article['Abstract']['AbstractText'][0]
-		return article
-
-	except IndexError:
-		return None
-
-
-def get_ListOfArticles(term, max_count):
-	"""
-	return the list of pmid article conatining
-	the term.
-	"""
-	h = Entrez.esearch(db='pubmed', retmax=max_count, term=term)
-	result = Entrez.read(h)
-	listOfArticles = result["IdList"]
-
-
-	return listOfArticles;
-
-
-
-def get_ListOfCommunPathway(elt1, elt2):
-
-	"""
-	-> elt1 and elt2 are KEGG id
-	return the list of commun pathway between elt1 and elt2
-	-> Use bioservices
-	-> Internet connection needed
-	-> Use KEGG database
-	-> "hsa" correspond to human in KEGG database
-	"""
-
-	k = KEGG(verbose=False)
-
-	list_OfCommunPathway = []
-	list_pathways_elt1 = k.get_pathway_by_gene(str(elt1), "hsa")
-	list_pathways_elt2 = k.get_pathway_by_gene(str(elt2), "hsa")
-
-	for pathway_elt1 in list_pathways_elt1.keys():
-		for pathway_elt2 in list_pathways_elt2.keys():
-			if(str(pathway_elt1) == str(pathway_elt2)):
-				list_OfCommunPathway.append(str(pathway_elt1))
-
-	return list_OfCommunPathway
-
-
-
-def get_ListOfDirectInteraction(elta, eltb):
-	"""
-	-> Scan interaction DataBase and return the list of direct interaction
-	between elta and eltb.
-	-> For now elta and eltb have to be uniprot ID
-	-> For now only scan mint DB
-	"""
-
-	list_interactions = []
-	s = PSICQUIC(verbose=False)
-	data = s.query("mint", str(elta)+" AND species:9606")
-
-	for interaction in data:
-		line1 = interaction[0]
-		line2 = interaction[1]
-		line1InArray = line1.split(":")
-		line2InArray = line2.split(":")
-		uniprotId_elt1 = line1InArray[1]
-		uniprotId_elt2 = line2InArray[1]
-		if(str(uniprotId_elt1) == str(elta) and str(uniprotId_elt2) == str(eltb)):
-			list_interactions.append(interaction)
-
-
-	return list_interactions
-
-
-
-def get_interactors(interaction):
-	"""
-	return the list of elements in interaction
-	-> always 2 elements
-	-> work for mint db
-	"""
-
-	list_ofInteractors = []
-
-	line1 = interaction[0]
-	line2 = interaction[1]
-	line1InArray = line1.split(":")
-	line2InArray = line2.split(":")
-	if(len(line1InArray) > 1):
-		uniprotId_elt1 = line1InArray[1]
-		list_ofInteractors.append(str(uniprotId_elt1))
-	else:
-		uniprotId_elt1 = "CAN'T PARSE DATA"
-		list_ofInteractors.append(str(uniprotId_elt1))
-	if(len(line2InArray) > 1):
-		uniprotId_elt2 = line2InArray[1]
-		list_ofInteractors.append(str(uniprotId_elt2))
-	else:
-		uniprotId_elt2 = "CAN'T PARSE DATA"
-		list_ofInteractors.append(str(uniprotId_elt2))
-
-	return list_ofInteractors
-
-
-
-def get_CuratedInteraction(elementToCheck):
-	"""
-	return the list of curated interaction (i.e doublons are removed)
-	including elementToCheck.
-
-	-> work for mint db
-	-> id are uniprotId
-	"""
-	#list_elementsToCheck.append(str(elementToCheck))
-	s = PSICQUIC(verbose=False)
-	data = s.query("mint", str(elementToCheck)+" AND species:9606")
-
-	listOfInterctorsInGraph = []
-	listOfCuratedInteraction = []
-
-	for db in data:
-		machin = get_interactors(db)
-		interactionType = get_InteractionType(db)
-		if(str(machin[0]) == str(elementToCheck) and str(machin[1]) not in listOfInterctorsInGraph):
-			interaction = str(machin[0])+"\t"+str(interactionType)+"\t"+str(machin[1])
-			listOfCuratedInteraction.append(interaction)
-			listOfInterctorsInGraph.append(machin[1])
-		elif(str(machin[1]) == str(elementToCheck) and str(machin[0]) not in listOfInterctorsInGraph):
-			interaction = str(machin[1])+"\t"+str(interactionType)+"\t"+str(machin[0])
-			listOfCuratedInteraction.append(interaction)
-			listOfInterctorsInGraph.append(machin[0])
-
-	return listOfCuratedInteraction
-
-
-
-
-def draw_InteractionGraph(element, fileName):
-	"""
-	Write all interactions including element and interactions
-	including each element assiocated with the first element
-	and so on ... in a .sif file (fileName).
-
-	-> Work with mint database
-	-> use grep -v "sapiens" to deal with unwanted output
-	return nothing
-	"""
-
-	list_elementsToCheck = []
-	list_elementChecked = []
-	list_elementsToCheck.append(element)
-
-	for element in list_elementsToCheck:
-		if(element not in list_elementChecked):
-			machin = get_CuratedInteraction(str(element))
-		
-			list_elementsToCheck.remove(str(element))
-			list_elementChecked.append(str(element))
-
-			for interaction in machin:
-				interactionInArray = interaction.split("\t")
-
-				grapheFile = open(fileName, "a")
-				grapheFile.write(interaction+"\n")
-				grapheFile.close()
-
-				print interaction
-				if(interactionInArray[2] not in list_elementsToCheck):
-					list_elementsToCheck.append(interactionInArray[2])
-		else:
-			print "->"+str(element) + "already Ckeck"
-
-
-
-def get_InteractionType(interaction):
-	"""
-	return the type of interaction
-	-> work on mint db
-	"""
-
-	typeOfInteraction =  interaction[11]
-	typeOfInteractionInArray = typeOfInteraction.split("(")
-	interactionName = typeOfInteractionInArray[1]
-	interactionName = interactionName[:-1]
-	return interactionName
-
-
-
-def convert_SifFileToGDFfile(fileName):
-	"""
-	[IN PROGRESS]
-
-	-> Try on small files 
-
-	"""
-
-	#check extension
-	fileNameInArray = fileName.split(".")
-	if(len(fileNameInArray) < 1):
-		print "Can't parse format for conversion\n"
-	elif(fileNameInArray[1] != "sif"):
-		print "Wrong format for input file, .sif expected ("+fileNameInArray[1]+" found)"
-	else:
-		inputFilename = fileNameInArray[0]
-
-	#Initialise node tmp file
-	tmpFile_node = open("nodes_buildGDF.tmp", "a")
-	tmpFile_node.write("nodedef>name VARCHAR\n")
-	tmpFile_node.close()
-
-	#Initialise edge tmp file
-	tmpFile_edge = open("edges_buildGDF.tmp", "a")
-	tmpFile_edge.write("edgedef>node1 VARCHAR,node2 VARCHAR\n")
-	tmpFile_edge.close()
-
-	listOfNodes = []
-	sifFile = open(fileName, "r")
-	for line in sifFile:
-		lineInArray = line.split("\t")
-		node1 = lineInArray[0]
-		node2 = lineInArray[2]
-		if(node1 not in listOfNodes):
-			tmpFile_node = open("nodes_buildGDF.tmp", "a")
-			tmpFile_node.write(str(node1)+"\n")
-			tmpFile_node.close()
-			listOfNodes.append(node1)
-		
-		tmpFile_edge = open("edges_buildGDF.tmp", "a")
-		tmpFile_edge.write(str(node1)+","+str(node2))
-		tmpFile_edge.close()
-
-	# Write GDF file
-	outputFile = open(str(inputFilename)+".gdf", "a")
-	tmpFile_node = open("nodes_buildGDF.tmp", "r")
-	for line in tmpFile_node:
-		outputFile.write(line)
-	tmpFile_node.close()
-	tmpFile_edge = open("edges_buildGDF.tmp", "r")
-	for line in tmpFile_edge:
-		outputFile.write(line)
-	tmpFile_edge.close()
-	outputFile.close()
-
-	# delete tmp file
-	os.remove("nodes_buildGDF.tmp")
-	os.remove("edges_buildGDF.tmp")
-
-
-def save_abstract(abstract, save_file):
+def describe_articles_type(abstract_folder):
 	##
-	## -> Save the abstract in a text file
-	## convert the abstract to unicode.
-	##
-
-	## preprocess abstract
-	#abstract_preprocess = unicode(abstract)
-	abstract_preprocess = abstract.encode('utf8')
-
-	## save abstract in file
-	output = open(save_file, "w")
-	output.write(abstract_preprocess)
-	output.close()
-
-def get_cohorte_size(abstract_file):
-	##
-	## IN PROGRESS
-	##
-	## -> Try to retrieve the number of patients/case
-	## in the dataset presented in the abstract
 	## 
-	## TODO : add more regex for size detection
-	## TODO : add to bibotlite.py
+	## Count the number of articles talking about
+	## several diseases, return a dictionnary.
+	## currently work on:
+	##		- SjS
+	##		- SLE
+	##		- RA
 	##
 
-	## read abstract
-	abstract = open(abstract_file, "r")
+	abstract_to_disease = {}
+	abstract_to_disease["SjS"] = 0
+	abstract_to_disease["SLE"] = 0
+	abstract_to_disease["RA"] = 0 
+	abstract_to_disease["Other"] = 0
+	abstract_list = glob.glob(str(abstract_folder)+"/*.txt")
+	for abstract_file in abstract_list:
 
-	cohorte_size = -1
-	for line in abstract:
+		talking_about_SjS = False
+		talking_about_RA = False
+		talking_about_SLE = False
 
-		## Try to catch a number before the apparition of the 
-		## term in catch terms list. keep the biggest number
-		## found in the abstract.
-		catch_terms = ["patients", "cases", "observations", "subjects"]
-		for item in catch_terms:
-			m = re.findall(r"([0-9]+[\.|,]?[0-9]+) "+str(item), line)		
-			if(m is not None):
-				for match in m:
-					match = match.replace(",", "")
-					try:
-						fetched_cohorte_size = int(match)
-						if(fetched_cohorte_size > cohorte_size):
-							cohorte_size = fetched_cohorte_size
-					except:
-						## do nothing
-						tardis = 1
+		abstract = open(abstract_file, "r")
 
-		## Try to catch a number after the apparition of the 
-		## term "n = ". keep the biggest number found in the
-		## abstract.
-		m = re.findall(r"n = ([0-9]+[\.|,]?[0-9]+)", line)		
-		if(m is not None):
-			for match in m:
-				match = match.replace(",", "")
-				try:
-					fetched_cohorte_size = int(match)
-					if(fetched_cohorte_size > cohorte_size):
-						cohorte_size = fetched_cohorte_size
-				except:
-					## do nothing
-					tardis = 1
+		for line in abstract:
 
-		## Try to catch a number in a classic expression
-		m = re.findall(r"[I,i]n total, ([0-9]+[\.|,]?[0-9]+) subjects", line)
-		if(m is not None):
-			for match in m:
-				match = match.replace(",", "")
-				try:
-					fetched_cohorte_size = int(match)
-					if(fetched_cohorte_size > cohorte_size):
-						cohorte_size = fetched_cohorte_size
-				except:
-					## do nothing
-					tardis = 1
+			## SjS
+			m = re.findall(r"([S,s]j.gren)", line)
+			if(len(m)>0):
+				talking_about_SjS = True
+			m = re.findall(r"(SjS)", line)
+			if(len(m)>0):
+				talking_about_SjS = True
 
-		"""
-		## Try to catch a number in a classic expression
-		m = re.findall(r"([0-9]+[\.|,]?[0-9]+)", line)
-		if(m is not None):
-			for match in m:
-				match = match.replace(",", "")
-				try:
-					fetched_cohorte_size = int(match)
-					if(fetched_cohorte_size > cohorte_size):
-						cohorte_size = fetched_cohorte_size
-				except:
-					## do nothing
-					tardis = 1
-		"""
+			## SLE
+			m = re.findall(r"([L,l]upus)", line)
+			if(len(m)>0):
+				talking_about_SLE = True
+			m = re.findall(r"(SLE)", line)
+			if(len(m)>0):
+				talking_about_SLE = True
 
+			## RA
+			m = re.findall(r"([A,a])rthrisis", line)
+			if(len(m)>0):
+				talking_about_RA = True
+			m = re.findall(r"(RA)", line)
+			if(len(m)>0):
+				talking_about_RA = True
 
-	## close abstract
-	abstract.close()
+		
+		if(talking_about_SjS):
+			abstract_to_disease["SjS"] += 1
+		if(talking_about_SLE):
+			abstract_to_disease["SLE"] += 1
+		if(talking_about_RA):
+			abstract_to_disease["RA"] += 1
+		else:
+			abstract_to_disease["Other"] += 1			
+		abstract.close()
 
-	## check if the cohorte_size variable
-	## is still set to -1, set it to NA if
-	## True
-	if(cohorte_size == -1):
-		cohorte_size = "NA"
-
-	## return the detected size of the cohorte
-	return cohorte_size
-
-
+	return abstract_to_disease
 
 
 
@@ -415,8 +91,6 @@ def get_date_from_meta_save(meta_file):
 	## no connection needed to NCBI server
 	##
 	## -> return the year of publication
-	##
-	## TODO : add to bibotlite.py
 	##
 
 	## Retrieve the year of publication
@@ -440,15 +114,12 @@ def get_date_from_meta_save(meta_file):
 
 
 
-
 def plot_pulbications_years(meta_data_folder):
 	##
 	## Retrieve the year of publications of all
 	## articles from the meta_data_folder and
 	## plot the histogramm of publications over
 	## the years
-	##
-	## TODO : add to bibotlite.py
 	##
 
 	## create the structure
@@ -465,7 +136,8 @@ def plot_pulbications_years(meta_data_folder):
 
 	## plot graphe
 	plt.bar(year_to_count.keys(), year_to_count.values(), 1, color='b')
-	plt.show()
+	plt.savefig("images/years_publications_evolution.png")
+	plt.close()
 
 
 
@@ -475,7 +147,6 @@ def plot_word_evolution(item_list, run_folder):
 	## -> Plot word frequency evolution over
 	## the last decade
 	##
-
 
 	for item in item_list:
 
@@ -525,82 +196,22 @@ def plot_word_evolution(item_list, run_folder):
 		for year in x_vector:
 			y_vector.append(year_to_frequency[year])
 		fig = plt.figure()
+
 		plt.plot(x_vector, y_vector)
-		plt.savefig(str(item)+"_frequency.png")
-		#plt.show()
-	
+		plt.savefig("images/"+str(item)+"_frequency.png")
+		plt.close()
 
+		## get apparition count
+		y_vector = []
+		x_vector = sorted(year_to_count.keys())
+		for year in x_vector:
+			y_vector.append(year_to_count[year])
+		fig = plt.figure()
 
+		plt.plot(x_vector, y_vector)
+		plt.savefig("images/"+str(item)+"_count.png")
+		plt.close()
 
-
-def describe_articles_type(run_folder):
-	##
-	## 
-	## Count the number of articles talking about
-	## several diseases, return a dictionnary.
-	## currently work on:
-	##		- SjS
-	##		- SLE
-	##		- RA
-	##
-
-	abstract_to_disease = {}
-	abstract_to_disease["SjS"] = 0
-	abstract_to_disease["SLE"] = 0
-	abstract_to_disease["RA"] = 0 
-	abstract_to_disease["Other"] = 0
-	abstract_list = glob.glob(str(run_folder)+"/abstract/*.txt")
-	for abstract_file in abstract_list:
-
-		talking_about_SjS = False
-		talking_about_RA = False
-		talking_about_SLE = False
-
-		abstract = open(abstract_file, "r")
-
-		for line in abstract:
-
-			## SjS
-			m = re.findall(r"([S,s]j.gren)", line)
-			if(len(m)>0):
-				talking_about_SjS = True
-			m = re.findall(r"(SjS)", line)
-			if(len(m)>0):
-				talking_about_SjS = True
-
-			## SLE
-			m = re.findall(r"([L,l]upus)", line)
-			if(len(m)>0):
-				talking_about_SLE = True
-			m = re.findall(r"(SLE)", line)
-			if(len(m)>0):
-				talking_about_SLE = True
-
-			## RA
-			m = re.findall(r"([A,a])rthrisis", line)
-			if(len(m)>0):
-				talking_about_RA = True
-			m = re.findall(r"(RA)", line)
-			if(len(m)>0):
-				talking_about_RA = True
-
-		
-		if(talking_about_SjS):
-			abstract_to_disease["SjS"] += 1
-		if(talking_about_SLE):
-			abstract_to_disease["SLE"] += 1
-		if(talking_about_RA):
-			abstract_to_disease["RA"] += 1
-		else:
-			abstract_to_disease["Other"] += 1
-
-			
-		abstract.close()
-
-	
-
-	print abstract_to_disease
-		
 
 
 
@@ -661,7 +272,6 @@ def get_all_subjects_from_abstract(abstract_folder):
 	return name_list
 
 
-
 def get_number_of_articles_from_log_file(log_file):
 	##
 	## Get the total number of articles found
@@ -682,7 +292,7 @@ def get_number_of_articles_from_log_file(log_file):
 			except:
 				number_of_articles = "NA"
 
-	log_data.close()
+	log_data.close
 
 	return number_of_articles
 
@@ -717,7 +327,6 @@ def get_number_of_keywords_from_log_file(log_file):
 	return number_of_keywords
 
 
-
 def get_articles_filter_stat(log_file):
 	##
 	## Get the count of articles that passed the first
@@ -746,7 +355,6 @@ def get_articles_filter_stat(log_file):
 
 			if(filter_1_info[1] == "PASSED" and filter_2_info[1] == "PASSED"):
 				pass_both_filter_cmpt += 1
-
 
 	log_data.close()
 
@@ -807,6 +415,7 @@ def get_country_publication_stat(run_folder):
 			informations = read(handle)
 			stuff = informations[u'PubmedArticle'][0]
 			country = stuff[u'MedlineCitation'][u'MedlineJournalInfo'][u'Country']
+			print country # to delete
 		except:
 			country = "NA"
 
@@ -817,7 +426,6 @@ def get_country_publication_stat(run_folder):
 			country_to_count[country] += 1
 
 	return country_to_count
-
 
 
 
@@ -936,8 +544,6 @@ def get_article_domain(abstract):
 		elif(word in modelisation_keywords):
 			modelisation_score += 1
 
-
-
 	## compute score
 	scores = {"Diagnostic":diagnostic_score, "Therapeutic":therapeutic_score, "Modelisation":modelisation_score}
 	sorted_scores = sorted(scores.items(), key=operator.itemgetter(1))
@@ -946,26 +552,6 @@ def get_article_domain(abstract):
 		article_theme = sorted_scores[-1][0]
 
 	return article_theme
-
-
-
-def get_count_of_articles_type_for_each_disease():
-	##
-	## IN PROGRESS
-	##
-
-	## Diagnostic
-	for file in glob.glob("articles_classification/Diagnostic/*"):
-
-		abstract = open(file, "r")
-		abstract_in_line = ""
-		for line in abstract:
-			abstract_in_line += line
-		abstract.close()
-
-		## SjS
-		disease_keywords = ["SjS", "sjogren"]
-
 
 
 
@@ -1020,8 +606,11 @@ def retrieve_techniques(display_details):
 	category_to_techniques = {"Diagnostic":{}, "Therapeutic":{}, "Modelisation":{}, "Unclassified":{}}
 
 	## Parse the abstracts
+	total_articles = 0
 	for category in ["Diagnostic", "Therapeutic", "Modelisation", "Unclassified"]:
+		total_articles += len(glob.glob("articles_classification/"+str(category)+"/*"))
 		for file in glob.glob("articles_classification/"+str(category)+"/*"):
+
 
 			abstract = open(file, "r")
 			abstract_in_line = ""
@@ -1279,18 +868,16 @@ def retrieve_techniques(display_details):
 
 	## Display details of the returned structure
 	if(display_details):
-		total = 119 + 604 +726 +19
 		detected = 0
 		for key in category_to_techniques.keys():
 			print "=> " +str(key) +" <="
 			for tech in category_to_techniques[key].keys():
 				print "    -> "+str(tech) +" : " +str(category_to_techniques[key][tech])
 				detected += category_to_techniques[key][tech]
-		print "=> "+str(detected) +" / " + str(total) +" || [ "+str(float(float(detected)/float(total))*100) +" % ]"
+		print "=> "+str(detected) +" / " + str(total_articles) +" || [ "+str(float(float(detected)/float(total_articles))*100) +" % ]"
 
 	## return dictionnary
 	return category_to_techniques
-
 
 
 def generate_techniques_figures(category_to_techniques_to_count):
@@ -1383,239 +970,301 @@ def generate_techniques_figures(category_to_techniques_to_count):
 
 
 
+############
+## SCRIPT #############################################################################################
+############
 
 
-"""
-TEST SPACE
-"""
+##--------------------------------------##
+## Get the Run Folder from command line ##
+##--------------------------------------##
+if(os.path.isdir(str(sys.argv[1])) and os.path.isdir(str(sys.argv[1])+"/meta") and os.path.isdir(str(sys.argv[1])+"/abstract")):
+	run_folder = str(sys.argv[1])
+	log_file = run_folder+"/bibotlite.log"
+else:
+	print "[ERROR] => Can't use the folder "+str(sys.argv[1])+" as run folder"
+	sys.exit()
 
 
+##-----------------------------##
+## Write the FIXEME table file ##
+##-----------------------------##
+
+## variables initialisation
+## Automatic retrieve
+total_number_of_articles = "NA"						# OK
+number_of_input_keywords = "NA"						# OK
+articles_pass_the_first_filter = "NA"				# OK
+articles_pass_the_last_filter = "NA"				# OK
+articles_pass_both_filter = "NA"					# OK
+machine_learning_SjS = "NA"							# OK
+machine_learning_Other = "NA" 						# OK
+machine_learning_SLE = "NA" 						# OK
+machine_learning_RA = "NA" 							# OK
+article_final_selection = "NA"						# OK
+articles_pass_the_first_filter_proportion = "NA"	# OK
+articles_pass_the_last_filter_proportion = "NA"		# OK
+drop_1 = "NA"										# OK
+drop_2 = "NA"										# OK
+number_of_publication_from_first_contry = "NA"		# OK
+number_of_publication_from_second_contry = "NA"		# OK
+first_country = "NA"								# OK
+second_country = "NA"								# OK
+number_of_other_publications = "NA"					# OK
+other_country_list = "NA"							# OK
+articles_2008 = "NA"								# OK
+articles_2017 = "NA"								# OK
+parsed_abstract_for_size = "NA"						# TODO
+size_2008 = "NA"									# OK
+size_2017 = "NA"									# OK
+diagnostic_techniques_list = "NA"					# TODO
+diagnostic_number_of_articles = "NA"				# OK
+diagnostic_number_of_patients = "NA"				# TODO
+diagnostic_sjogren = "NA"							# OK
+diagnostic_other = "NA"								# OK
+therapeutic_techniques_list = "NA"					# TODO
+therapeutic_number_of_articles = "NA"				# OK
+therapeutic_number_of_patients = "NA"				# TODO
+therapeutic_sjogren = "NA"							# OK
+therapeutic_other = "NA"							# OK
+modelisation_techniques_list = "NA"					# TODO
+modelisation_number_of_articles = "NA"				# OK
+modelisation_number_of_patients = "NA"				# TODO
+modelisation_sjogren = "NA"							# OK
+modelisation_other = "NA"							# OK
+unclassified_techniques_list = "NA"					# TODO
+unclassified_number_of_articles = "NA"				# OK
+unclassified_number_of_patients = "NA"				# TODO
+unclassified_sjogren = "NA"							# OK
+unclassified_other = "NA"							# OK
 
 
-
-#get_count_of_articles_type_for_each_disease()
-
-truc = retrieve_techniques(True)
-generate_techniques_figures(truc)
-
-
-"""
-print "------[TEST SPACE]------\n"
-machin = get_ListOfDirectInteraction("P43403", "P06239")
-print "-------------------------------------------------------"
-print machin
-"""
+## Manual retrieve
+term1 = "NA"										# TODO
+term2 = "NA"										# TODO
+term3 = "NA"										# TODO
+term4 = "NA"										# TODO
+term5 = "NA"										# TODO
+term6 = "NA"										# TODO
+article_manually_retrieve = "NA"					# TODO
 
 
+## save existing manifest file if it already exist
+if(os.path.isfile("draft_FIXEME_table.csv")):
+	now = datetime.datetime.now()
+	tag = str(now.minute)+"_"+str(now.hour)+"_"+str(now.day)+"_"+str(now.month)
+	shutil.copy("draft_FIXEME_table.csv", "draft_FIXEME_table_"+tag+".csv",)
 
 
+## Get variables values
+disease_to_articles = describe_articles_type(run_folder+"/abstract")
+machine_learning_SjS = disease_to_articles["SjS"]
+machine_learning_Other = disease_to_articles["Other"]
+machine_learning_SLE = disease_to_articles["SLE"]
+machine_learning_RA = disease_to_articles["RA"]
+total_number_of_articles = get_number_of_articles_from_log_file(log_file)
+number_of_input_keywords = get_number_of_keywords_from_log_file(log_file)
+article_stats = get_articles_filter_stat(log_file)
+articles_pass_the_first_filter = article_stats[0]
+articles_pass_the_last_filter = article_stats[1]
+articles_pass_both_filter = article_stats[2]
+articles_pass_the_first_filter_proportion = float(float(articles_pass_the_first_filter)/float(total_number_of_articles))*100
+articles_pass_the_last_filter_proportion = float(float(articles_pass_the_last_filter)/float(total_number_of_articles))*100
+drop_1 = total_number_of_articles - articles_pass_the_first_filter
+drop_2 = articles_pass_the_first_filter - articles_pass_both_filter
+articles_2008 = get_number_of_articles_for_year(run_folder, 2008)
+articles_2017 = get_number_of_articles_for_year(run_folder, 2017)
+if(article_manually_retrieve == "NA"):
+	article_final_selection = articles_pass_both_filter
+else:
+	article_final_selection = articles_pass_both_filter + article_manually_retrieve
+country_stats = get_country_publication_stat(run_folder)
+print country_stats
+first_country = max(country_stats, key=country_stats.get)
+number_of_publication_from_first_contry = country_stats[first_country]
+del country_stats[first_country]
+if(len(country_stats.keys()) > 0):
+	second_country = max(country_stats, key=country_stats.get)
+	number_of_publication_from_second_contry = country_stats[second_country]
+	del country_stats[second_country]
+	number_of_other_publications = 0
+	for val in country_stats.values():
+		number_of_other_publications += val
+	other_country_list = ""
+	sorted_stats = sorted(country_stats.items(), key=operator.itemgetter(1))
+	for key in sorted_stats[::-1]:
+		other_country_list += str(key[0]) +", "
+	other_country_list = other_country_list[:-2]
 
-#plot_pulbications_years("SAVE/run_2/meta")
-
-log_file =  "SAVE/run_14h:1m:25:1/bibotlite.log"
-run_folder = "SAVE/run_14h:1m:25:1"
-"""
-found_cmpt = 0
-abstract_list = glob.glob(run_folder+"/abstract/*_abstract.txt")
-
-for abstract in abstract_list:
-	data = open(abstract, "r")
-	for line in data:
-		print line
-	data.close()
-
-for abstract_file in abstract_list:
-	size = get_cohorte_size(abstract_file)
-	if(size != "NA"):
-		found_cmpt += 1
-
-print "=> "+str(found_cmpt) +" / "+str(len(abstract_list)) +" [" +str(float(float(found_cmpt)/float(len(abstract_list))*100)) +"]"
-"""
-
-
-
-
-
-
-
-"""
-diagnostic_abstracts = ["abstract/29363510_abstract.txt", ]
-therapeutic_abstracts = ["abstract/29359591_abstract.txt", "25672757_abstract.txt"]
-modelisation_abstracts = ["abstract/29333443_abstract.txt"]
-abstract = "abstract/25573986_abstract.txt"
-
-import shutil
 
 class_to_count = {"Diagnostic":0, "Therapeutic":0, "Modelisation":0, "Unclassified":0}
-for abstract in glob.glob("abstract/*_abstract.txt"):
+for abstract in glob.glob(str(run_folder)+"/abstract/*_abstract.txt"):
 	theme = get_article_domain(abstract)
 	class_to_count[theme] += 1
 	pmid = abstract.split("/")
 	pmid = pmid[-1]
 	shutil.copy(abstract, "articles_classification/"+theme+"/"+pmid)
+unclassified_number_of_articles = class_to_count["Unclassified"]
+modelisation_number_of_articles = class_to_count["Modelisation"]
+diagnostic_number_of_articles = class_to_count["Diagnostic"]
+therapeutic_number_of_articles = class_to_count["Therapeutic"]
 
-print class_to_count
-"""
 
-#get_all_subjects_from_abstract("abstract")
+for theme in class_to_count.keys():
+	disease_to_articles = describe_articles_type("articles_classification/"+theme)
 
-#describe_articles_type("SAVE/run_2")
+	print "=> " + str(theme)
+	print disease_to_articles
 
-#item_list = ["neural network", "machine learning", "machine", "classification", "modelisation", "Sjogren", "random forest", "kmean",
-#"statistic", "bioinformatic", "big data", "artificial intelligence", "diagnostic", "patients", "learning", "prediction", "cluster", "clusterring",
-#"computer", "lupus", "RA", "IA", "sjogren"]
-#plot_word_evolution(item_list, "SAVE/run_2")
+	sjs_patients = disease_to_articles["SjS"]
+	if(theme == "Diagnostic"):
+		diagnostic_sjogren = sjs_patients
+		diagnostic_other = diagnostic_number_of_articles - sjs_patients
+	elif(theme == "Therapeutic"):
+		therapeutic_sjogren = sjs_patients
+		therapeutic_other = therapeutic_number_of_articles - sjs_patients
+	elif(theme == "Modelisation"):
+		modelisation_sjogren = sjs_patients
+		modelisation_other = modelisation_number_of_articles - sjs_patients
+	elif(theme == "Unclassified"):
+		unclassified_sjogren = sjs_patients
+		unclassified_other = unclassified_number_of_articles - sjs_patients
 
-"""
-m = re.search(r"(?P<number>\w+) patients", "There are 257 patients in this study.")
-if(m is not None):
-	print m.group('number')
-"""
+## Techniques
+diagnostic_techniques_list = "\\begin{tabular}{c}"
+modelisation_techniques_list = "\\begin{tabular}{c}"
+therapeutic_techniques_list = "\\begin{tabular}{c}"
+unclassified_techniques_list = "\\begin{tabular}{c}"
 
-"""
-pmid_list = []
-pmid_file = open("/home/perceval/Workspace/publications/immuno_review/articles/manually_retrieved/MANIFEST.txt", "r")
-for line in pmid_file:
+category_to_techniques_to_count = retrieve_techniques(True)
+for tech in category_to_techniques_to_count["Diagnostic"].keys():
+	diagnostic_techniques_list += str(tech)+" \\\\"
+for tech in category_to_techniques_to_count["Therapeutic"].keys():
+	therapeutic_techniques_list += str(tech)+" \\\\"
+for tech in category_to_techniques_to_count["Modelisation"].keys():
+	modelisation_techniques_list += str(tech)+" \\\\"
+for tech in category_to_techniques_to_count["Unclassified"].keys():
+	unclassified_techniques_list += str(tech)+" \\\\"
+
+diagnostic_techniques_list += "\\end{tabular}"
+modelisation_techniques_list += "\\end{tabular}"
+therapeutic_techniques_list += "\\end{tabular}"
+unclassified_techniques_list += "\\end{tabular}"
+
+
+## write a new manifest file
+manifest_file = open("draft_FIXEME_table.csv", "w")
+manifest_file.write("FIXME<totalnumberofarticles>;"+str(total_number_of_articles)+"\n")
+manifest_file.write("FIXME<numberofinputkeywords>;"+str(number_of_input_keywords)+"\n")
+manifest_file.write("FIXME<articlespassthefirstfilter>;"+str(articles_pass_the_first_filter)+"\n")
+manifest_file.write("FIXME<articlespasslastfilter>;"+str(articles_pass_the_last_filter)+"\n")
+manifest_file.write("FIXME<machinelearningSjS>;"+str(machine_learning_SjS)+"\n")
+manifest_file.write("FIXME<machinelearningOther>;"+str(machine_learning_Other)+"\n")
+manifest_file.write("FIXME<machinelearningSLE>;"+str(machine_learning_SLE)+"\n")
+manifest_file.write("FIXME<machinelearningRA>;"+str(machine_learning_RA)+"\n")
+manifest_file.write("FIXME<articlemanuallyretrieve>;"+str(article_manually_retrieve)+"\n")
+manifest_file.write("FIXME<articlespassbothfilter>;"+str(articles_pass_both_filter)+"\n")
+manifest_file.write("FIXME<articlefinalselection>;"+str(article_final_selection)+"\n")
+manifest_file.write("FIXME<articlespassthefirstfilterproportion>;"+str(articles_pass_the_first_filter_proportion)+"\n")
+manifest_file.write("FIXME<articlespasslastfilterproportion>;"+str(articles_pass_the_last_filter_proportion)+"\n")
+manifest_file.write("FIXME<drop1>;"+str(drop_1)+"\n")
+manifest_file.write("FIXME<drop2>;"+str(drop_2)+"\n")
+manifest_file.write("FIXME<numberofpublicationfromfirstcontry>;"+str(number_of_publication_from_first_contry)+"\n")
+manifest_file.write("FIXME<numberofpublicationfromsecondcontry>;"+str(number_of_publication_from_second_contry)+"\n")
+manifest_file.write("FIXME<firstcountry>;"+str(first_country)+"\n")
+manifest_file.write("FIXME<secondcountry>;"+str(second_country)+"\n")
+manifest_file.write("FIXME<numberofotherpublications>;"+str(number_of_other_publications)+"\n")
+manifest_file.write("FIXME<othercountrylist>;"+str(other_country_list)+"\n")
+manifest_file.write("FIXME<articles2008>;"+str(articles_2008)+"\n")
+manifest_file.write("FIXME<articles2017>;"+str(articles_2017)+"\n")
+manifest_file.write("FIXME<parsedabstractforsize>;"+str(parsed_abstract_for_size)+"\n")
+manifest_file.write("FIXME<size2008>;"+str(size_2008)+"\n")
+manifest_file.write("FIXME<size2017>;"+str(size_2017)+"\n")
+manifest_file.write("FIXME<term1>;"+str(term1)+"\n")
+manifest_file.write("FIXME<term2>;"+str(term2)+"\n")
+manifest_file.write("FIXME<term3>;"+str(term3)+"\n")
+manifest_file.write("FIXME<term4>;"+str(term4)+"\n")
+manifest_file.write("FIXME<term5>;"+str(term5)+"\n")
+manifest_file.write("FIXME<term6>;"+str(term6)+"\n")
+manifest_file.write("FIXME<diagnosticTechniquesList>;"+str(diagnostic_techniques_list)+"\n")
+manifest_file.write("FIXME<diagnosticNumberOfArticles>;"+str(diagnostic_number_of_articles)+"\n")
+manifest_file.write("FIXME<diagnosticNumberOfPatients>;"+str(diagnostic_number_of_patients)+"\n")
+manifest_file.write("FIXME<diagnosticSjogren>;"+str(diagnostic_sjogren)+"\n")
+manifest_file.write("FIXME<diagnosticOther>;"+str(diagnostic_other)+"\n")
+manifest_file.write("FIXME<therapeuticTechniquesList>;"+str(therapeutic_techniques_list)+"\n")
+manifest_file.write("FIXME<therapeuticNumberOfArticles>;"+str(therapeutic_number_of_articles)+"\n")
+manifest_file.write("FIXME<therapeuticNumberOfPatients>;"+str(therapeutic_number_of_patients)+"\n")
+manifest_file.write("FIXME<therapeuticSjogren>;"+str(therapeutic_sjogren)+"\n")
+manifest_file.write("FIXME<therapeuticOther>;"+str(therapeutic_other)+"\n")
+manifest_file.write("FIXME<modelisationTechniquesList>;"+str(modelisation_techniques_list)+"\n")
+manifest_file.write("FIXME<modelisationNumberOfArticles>;"+str(modelisation_number_of_articles)+"\n")
+manifest_file.write("FIXME<modelisationNumberOfPatients>;"+str(modelisation_number_of_patients)+"\n")
+manifest_file.write("FIXME<modelisationSjogren>;"+str(modelisation_sjogren)+"\n")
+manifest_file.write("FIXME<modelisationOther>;"+str(modelisation_other)+"\n")
+manifest_file.write("FIXME<unclassifiedTechniquesList>;"+str(unclassified_techniques_list)+"\n")
+manifest_file.write("FIXME<unclassifiedNumberOfArticles>;"+str(unclassified_number_of_articles)+"\n")
+manifest_file.write("FIXME<unclassifiedNumberOfPatients>;"+str(unclassified_number_of_patients)+"\n")
+manifest_file.write("FIXME<unclassifiedSjogren>;"+str(unclassified_sjogren)+"\n")
+manifest_file.write("FIXME<unclassifiedOther>;"+str(unclassified_other)+"\n")
+manifest_file.close()
+
+
+##--------------------##
+## Create The Figures ##
+##--------------------##
+
+## Check if the year publication figure already exist,
+## save it with a time_tag if yes.
+if(os.path.isfile("images/years_publications_evolution.png")):
+	now = datetime.datetime.now()
+	tag = str(now.minute)+"_"+str(now.hour)+"_"+str(now.day)+"_"+str(now.month)
+	shutil.copy("images/years_publications_evolution.png", "images/years_publications_evolution_"+tag+".png")
+
+## Create new year publication figure
+plot_pulbications_years(str(run_folder)+"/meta")
+
+## create the techniques figure
+generate_techniques_figures(category_to_techniques_to_count)
+
+## Create database size figure
+
+
+
+## Create frquency plot
+## TODO : find the optimal graphe among the generated graphe
+## TODO : drop year 2019 and 2018
+item_list = get_all_subjects_from_abstract(run_folder+"/abstract")
+print item_list
+plot_word_evolution(item_list, run_folder)
+
+
+##-----------------##
+## Write The Paper ##
+##-----------------##
+
+## Open manifest of FIXEME varables
+FIXEME_to_value = {}
+manifest = open("draft_FIXEME_table.csv", "r")
+for line in manifest:
 	line = line.replace("\n", "")
-	pmid_list.append(line)
-pmid_file.close()
-for pmid in pmid_list:
-	try:
-		abstract = fetch_abstract(pmid)
-		save_abstract(abstract, "abstract_1/abstract/"+str(pmid)+".txt")
-	except:
-		print "FAILED"
-"""
+	line_in_array = line.split(";")
+	FIXEME_to_value[line_in_array[0]] = line_in_array[1]
+manifest.close()
 
-"""
-save_path = "SAVE/run_1/abstract/*.txt"
-old_path = "abstract_1/abstract/*.txt"
-run_2 = "abstract_2/*.txt"
-current_run = "abstract/*.txt"
-cmpt = 1
-for abstract in glob.glob(current_run):
-	size = get_cohorte_size(abstract)
-	print size
-	cmpt += 1
-"""
+## Create a copy of tex file with the good values
+original_tex_file = open("draft.tex", "r")
+output_tex_file = open("draft_ready.tex", "w")
+for line in original_tex_file:
 
+	for key in FIXEME_to_value.keys():
+		line = line.replace(key, FIXEME_to_value[key])
 
-#k = KEGG(verbose=False)
-#truc = k.find("hsa", "zap70")
-#pathway = k.get_pathway_by_gene("1956", "hsa")
-#print pathway
-#k.show_pathway("hsa05218", keggid={"1956": "red"})
+	output_tex_file.write(line)
 
-
-
-#draw_InteractionGraph("P43403", "monTest.sif")
-#convert_SifFileToGDFfile("monTest.sif")
-
-#abstract = fetch_abstract(27755966)
-#print abstract
-
-
-
-"""
-list_elementsToCheck = []
-list_elementChecked = []
-list_elementsToCheck.append("P43403")
-
-for element in list_elementsToCheck:
-	if(element not in list_elementChecked):
-		machin = get_CuratedInteraction(str(element))
-		
-		list_elementsToCheck.remove(str(element))
-		list_elementChecked.append(str(element))
-
-		for interaction in machin:
-			interactionInArray = interaction.split("->")
-			print interaction
-			if(interactionInArray[1] not in list_elementsToCheck):
-				list_elementsToCheck.append(interactionInArray[1])
-	else:
-		print "->"+str(element) + "already Ckeck"
-"""
-
-
-
-"""
-elementToCheck = "ZAP70"
-s = PSICQUIC(verbose=False)
-#data = s.query("mint", "ZAP70 AND species:9606")
-data = s.query("mint", str(elementToCheck)+" AND species:9606")
-
-for db in data:
-	machin = get_interactors(db)
-	truc = get_InteractionType(db)
-	print truc
-"""
-
-	
-
-	
-
-"""
-	line1 = db[0]
-	line2 = db[1]
-	line1InArray = line1.split(":")
-	line2InArray = line2.split(":")
-	uniprotId_elt1 = line1InArray[1]
-	uniprotId_elt2 = line2InArray[1]
-	print str(uniprotId_elt1)+" || "+str(uniprotId_elt2)
-"""
+output_tex_file.close()
+original_tex_file.close()
 
 
 
 
 
-
-# Retrieve Article
-#test = fetch_abstract(27045581)
-#print test
-
-
-
-## Test get_ListOfArticles function
-"""
-print "[+] => Testing get_ListOfArticles function"
-machin = get_ListOfArticles("HLA", 100)
-for pmid in machin:
-	try:
-		test = fetch_abstract(pmid)
-		print "["+str(pmid)+"]\n"
-		print test
-	except:
-		print "[!] Can't read "+str(pmid)
-print "[*] => Test Done"
-"""
-
-
-"""
-# test data
-test = "Rabbits are dangerous. Rabbits are not dangerous"
-print test
-# import nltk stuff
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-
-# Structure Information
-sentences = nltk.sent_tokenize(test)
-sentences = [nltk.word_tokenize(sent) for sent in sentences]
-sentences = [nltk.pos_tag(sent) for sent in sentences]
-
-# Chunking
-grammar = "NP: {<DT>?<JJ>*<NN>}"
-cp = nltk.RegexpParser(grammar)
-for sentence in sentences:
-	print sentence
-	result = cp.parse(sentence)
-	result.draw()
-"""
-
-## Test mygene module
-"""
-mg = mygene.MyGeneInfo()
-truc = mg.query('NRAS', size=1)
-print truc["hits"][0]
-"""
