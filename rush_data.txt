@@ -1,0 +1,43 @@
+Unclassified,clustering,2
+Unclassified,artificial neural network,1
+Unclassified,decision tree,1
+Therapeutic,multivariate analysis,1
+Therapeutic,Poisson regression,1
+Therapeutic,machine learning,1
+Therapeutic,proportion hazard regression model,1
+Therapeutic,bioinformatics analysis,2
+Therapeutic,chi-squared,1
+Therapeutic,logistic regression,1
+Therapeutic,Fisher test,1
+Modelisation,linear regression,1
+Modelisation,mixed models,3
+Modelisation,discriminant analysis,1
+Modelisation,support vector machine,1
+Modelisation,GLM,3
+Modelisation,decision tree,1
+Modelisation,regression analysis,2
+Modelisation,k mean,1
+Modelisation,machine learning,7
+Modelisation,proportion hazard regression model,2
+Modelisation,bioinformatics analysis,2
+Modelisation,normalization,5
+Modelisation,logistic regression,14
+Modelisation,t-test,2
+Modelisation,artificial neural network,3
+Modelisation,chi-squared,1
+Diagnostic,clustering,1
+Diagnostic,discriminant analysis,2
+Diagnostic,PCA,1
+Diagnostic,multivariate regression,1
+Diagnostic,regression analysis,1
+Diagnostic,machine learning,4
+Diagnostic,proportion hazard regression model,3
+Diagnostic,univariate analysis,3
+Diagnostic,normalization,2
+Diagnostic,logistic regression,9
+Diagnostic,t-test,2
+Diagnostic,Fisher test,1
+Diagnostic,linear regression,3
+Diagnostic,random forest,5
+Diagnostic,artificial neural network,2
+Diagnostic,Cox regression,4
